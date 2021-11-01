@@ -1,7 +1,9 @@
 #pragma once
 
+#define MAX_NAME 20
+
 struct sessionInfo{
-    char usrId[8];
+    char usrName[MAX_NAME];
     int sessionId;
 };
 struct sessionInfo* sessionDB;

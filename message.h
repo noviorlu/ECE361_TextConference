@@ -1,4 +1,5 @@
 #pragma once
+#include <sys/socket.h>
 
 #define MAX_DATALEN 4
 #define MAX_TYPE 2
@@ -22,6 +23,28 @@ struct message {
     unsigned char source[MAX_NAME];
     unsigned char data[MAX_DATA];
 };
+
+//Still Working on it, but first Finish the connection 
+void recvMessage(int fd, struct message* const destMessage){
+    int errorB;
+    char buf[MAX_DATALEN + 1] = "";
+    while(strlen(buf) < MAX_DATALEN + 1){
+        if((errorB = recv(fd, buf, MAX_DATALEN + 1 - strlen(buf), 0)) <= 0){
+            // got error or connection closed by client
+            if (errorB == 0) {
+                // connection closed
+                printf("selectserver: client socket %d shutdown\n", fd);
+            }else perror("recv");
+        }
+    }
+    if(buf[4]!= ':') printf("Not a message, Dropped\n"); return;
+    
+    //Read DATALENGTH
+    char dataLen[MAX_DATALEN + 1];
+    memset(dataLen, '\0', MAX_DATALEN + 1);
+    memcpy(dataLen, buf, MAX_DATALEN);
+    destMessage->size = atoi(dataLen);
+}
 
 //MessageConverter
 //EXAMPLE MESSAGE STRING: "DATALENGTH(4):TYPE(2):CLIENTID(8):DATA(9999)"

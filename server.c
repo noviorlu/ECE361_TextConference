@@ -136,7 +136,15 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                     close(i); // bye!
                     FD_CLR(i, &master); // remove from master set
                 }else{
+<<<<<<< HEAD
                     dataProcess(&b,i);
+=======
+                    //dataProcess(&b);
+                    printf("%d, ", b.size);
+                    printf("%d, ", b.type);
+                    printf("%s, ", b.source);
+                    printf("%s\n", b.data);
+>>>>>>> 74af42a243a30f806453adc0f0bbec05af78b301
                 }
             }
         }

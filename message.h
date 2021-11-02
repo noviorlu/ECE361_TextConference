@@ -23,6 +23,7 @@ struct message {
     unsigned char source[MAX_NAME];
     unsigned char data[MAX_DATA];
 };
+<<<<<<< HEAD
 
 void sendhelper(int sender, unsigned int size,unsigned int type,
     unsigned char source[MAX_NAME], unsigned char data[MAX_DATA],){
@@ -33,6 +34,14 @@ void sendhelper(int sender, unsigned int size,unsigned int type,
     send(sender, str, strlen(str), 0);
 }
 
+=======
+void message(struct message* b, int size, int type, char* source, char* data){
+    b->size = size;
+    b->type = type;
+    strcpy(b->source, source);
+    strcpy(b->data, data);
+}
+>>>>>>> 74af42a243a30f806453adc0f0bbec05af78b301
 int recvPlusSize(int fd, int size, char destStr[size + 1]){
     int errorB = 0;
     for(int i = 0; i < size;){
@@ -45,10 +54,8 @@ int recvPlusSize(int fd, int size, char destStr[size + 1]){
 
 int stringToLength(char* lenStr){
     //Read DATALENGTH
-    char dataLen[MAX_DATALEN + 1];
-    memset(dataLen, '\0', MAX_DATALEN + 1);
-    memcpy(dataLen, lenStr, MAX_DATALEN);
-    return atoi(dataLen);
+    char* buf = strtok(lenStr, ":");
+    return atoi(buf);
 }
 
 //MessageConverter
@@ -97,6 +104,5 @@ int recvMessage(int fd, struct message* const destMessage){
     errorB = recvPlusSize(fd, extractSize, b);
     if(errorB <= 0)return errorB;
     stringToMessage(b, destMessage);
-
     return errorB;
 }

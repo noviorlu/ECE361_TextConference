@@ -6,15 +6,15 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-
+#include "sessionDB.h"
 #include "message.h"
 
 #pragma region CONSTVAR
 size_t listener;
 fd_set master;
 int fdmax;
+int userSize=0;
 
-int databaseSize;
 #pragma endregion
 
 void initServer(char* PORT);
@@ -69,37 +69,51 @@ void newConnection(){
         );
     }
 }
-// void login(struct message* b){
-//     char[MAX_PSSWD] password=b->data;
-//     char[MAX_NAME] name=b->source;
 
-//     for(int i=0;i<3;i++){
-//         if(usrDB[i].name==name){
-//             if(usrDB[i].password==password){
-//                 for(int i=0;i<databaseSize;i++){
-//                     if()
-//                 }
+void login(struct message* b, int sockfd){
+    char[MAX_PSSWD] password=b->data;
+    char[MAX_NAME] name=b->source;
 
-
-//             }
-//         }
-//     }
-// }
-// void exit(){
+    for(int i=0;i<3;i++){
+        //in userDatabase
+        if(usrDB[i].name==name){
+            //has correct password
+            if(usrDB[i].password==password){
+                for(int i=0;i<userSize;i++){
+                    //already in session
+                    if(sessionDB[i].usrName==name){
+                        //NACK, Already logged in
+                        sendhelper(socketfd,18,2,"Server","user has logged in")
+                    }else{
+                        userSize++;
+                        if(userSize>=100){
+                            //NACK, FULL
+                        }else{
+                            struct sessionInfo newUser = {name, -1}; 
+                            sessionDB[userSize]=newUser;
+                            //ACK
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+void exit(){
     
-// }
-// void dataProcess(struct message* b){
-//     struct message reply;
-//     switch(b.type)
-//     {
-//         case LOGIN:
-//             login(b);
-//         break;
-//         case EXIT:
-//         ;
-//         break;
-//     }
-// }
+}
+void dataProcess(struct message* b, int i){
+    struct message reply;
+    switch(b.type)
+    {
+        case LOGIN:
+            login(b,i);
+        break;
+        case EXIT:
+        ;
+        break;
+    }
+}
 void monitor(int fdmax, fd_set *restrict read_fds){
     // run through the existing connections looking for data to read
     for(int i = 0; i <= fdmax; i++) {
@@ -122,7 +136,7 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                     close(i); // bye!
                     FD_CLR(i, &master); // remove from master set
                 }else{
-                    dataProcess(&b);
+                    dataProcess(&b,i);
                 }
             }
         }

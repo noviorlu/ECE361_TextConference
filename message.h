@@ -24,6 +24,15 @@ struct message {
     unsigned char data[MAX_DATA];
 };
 
+void sendhelper(int sender, unsigned int size,unsigned int type,
+    unsigned char source[MAX_NAME], unsigned char data[MAX_DATA],){
+    struct message b = {size,type,source,data};
+    char str[MAX_TOTAL] = "";
+    messageToString(str, &b);
+    printf("%s\n", str);
+    send(sender, str, strlen(str), 0);
+}
+
 int recvPlusSize(int fd, int size, char destStr[size + 1]){
     int errorB = 0;
     for(int i = 0; i < size;){

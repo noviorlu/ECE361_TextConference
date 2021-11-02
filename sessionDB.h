@@ -10,4 +10,4 @@ struct sessionInfo{
     char usrName[MAX_NAME];
     int sessionId;
 };
-struct sessionInfo* sessionDB = (sessionInfo*)malloc(10*sizeof(sessionInfo));
+struct sessionInfo* sessionDB[100]; 

@@ -122,7 +122,11 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                     close(i); // bye!
                     FD_CLR(i, &master); // remove from master set
                 }else{
-                    dataProcess(&b);
+                    //dataProcess(&b);
+                    printf("%d, ", b.size);
+                    printf("%d, ", b.type);
+                    printf("%s, ", b.source);
+                    printf("%s\n", b.data);
                 }
             }
         }

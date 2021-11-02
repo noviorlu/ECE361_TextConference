@@ -13,6 +13,8 @@
 size_t listener;
 fd_set master;
 int fdmax;
+
+int databaseSize;
 #pragma endregion
 
 void initServer(char* PORT);
@@ -25,14 +27,14 @@ int main(int argc, char *argv[]){
     initServer(argv[1]);
 
     fd_set read_fds;
-
+    FD_ZERO(&master);
+    FD_ZERO(&read_fds);
+    
     // add the listener to the master set
     FD_SET(listener, &master);
 
     // keep track of the biggest file descriptor
-    fdmax = listener; // so far, it's this one
-
-    
+    fdmax = listener; // so far, it's this one 
 
     // main loop
     for(;;) {
@@ -42,7 +44,6 @@ int main(int argc, char *argv[]){
             exit(4);
         }
         monitor(fdmax, &read_fds);
-        
     }
 }
 void newConnection(){
@@ -68,9 +69,37 @@ void newConnection(){
         );
     }
 }
-void dataProcess(int dataLen){
+// void login(struct message* b){
+//     char[MAX_PSSWD] password=b->data;
+//     char[MAX_NAME] name=b->source;
 
-}
+//     for(int i=0;i<3;i++){
+//         if(usrDB[i].name==name){
+//             if(usrDB[i].password==password){
+//                 for(int i=0;i<databaseSize;i++){
+//                     if()
+//                 }
+
+
+//             }
+//         }
+//     }
+// }
+// void exit(){
+    
+// }
+// void dataProcess(struct message* b){
+//     struct message reply;
+//     switch(b.type)
+//     {
+//         case LOGIN:
+//             login(b);
+//         break;
+//         case EXIT:
+//         ;
+//         break;
+//     }
+// }
 void monitor(int fdmax, fd_set *restrict read_fds){
     // run through the existing connections looking for data to read
     for(int i = 0; i <= fdmax; i++) {
@@ -80,25 +109,21 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                 newConnection();
             }
             else {
-                char buf[256];
-                int nbytes;
-                // handle data from a client
-                if ((nbytes = recv(i, buf, sizeof buf, 0)) <= 0) {
-                    // got error or connection closed by client
-                    if (nbytes == 0) {
-                        // connection closed
-                        printf("selectserver: client socket %d shutdown\n", i);
-                    } else {
-                        perror("recv");
-                    }
+                struct message b;
+                int errorB = recvMessage(i, &b);
+                if(errorB == 0){
+                    printf("Client socket %d connection Closed\n", i);
                     close(i); // bye!
                     FD_CLR(i, &master); // remove from master set
                 }
-                else {
-                    // we got some data from a client
-                    printf("%s\n",buf);
+                else if(errorB == -1) perror("recv");
+                else if(errorB == -2){
+                    printf("Invalid Message, client was hacked");
+                    close(i); // bye!
+                    FD_CLR(i, &master); // remove from master set
+                }else{
+                    dataProcess(&b);
                 }
-            
             }
         }
     }

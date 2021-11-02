@@ -24,57 +24,44 @@ struct message {
     unsigned char data[MAX_DATA];
 };
 
-//Still Working on it, but first Finish the connection 
-void recvMessage(int fd, struct message* const destMessage){
-    int errorB;
-    char buf[MAX_DATALEN + 1] = "";
-    while(strlen(buf) < MAX_DATALEN + 1){
-        if((errorB = recv(fd, buf, MAX_DATALEN + 1 - strlen(buf), 0)) <= 0){
-            // got error or connection closed by client
-            if (errorB == 0) {
-                // connection closed
-                printf("selectserver: client socket %d shutdown\n", fd);
-            }else perror("recv");
-        }
+int recvPlusSize(int fd, int size, char destStr[size + 1]){
+    int errorB = 0;
+    for(int i = 0; i < size;){
+        if((errorB = recv(fd, destStr + i, size - i, 0)) <= 0)
+            return errorB;
+        i = strlen(destStr);
     }
-    if(buf[4]!= ':') printf("Not a message, Dropped\n"); return;
-    
+    return errorB;
+}
+
+int stringToLength(char* lenStr){
     //Read DATALENGTH
     char dataLen[MAX_DATALEN + 1];
     memset(dataLen, '\0', MAX_DATALEN + 1);
-    memcpy(dataLen, buf, MAX_DATALEN);
-    destMessage->size = atoi(dataLen);
+    memcpy(dataLen, lenStr, MAX_DATALEN);
+    return atoi(dataLen);
 }
 
 //MessageConverter
-//EXAMPLE MESSAGE STRING: "DATALENGTH(4):TYPE(2):CLIENTID(8):DATA(9999)"
 void stringToMessage(const char * const srcStr, struct message* const destMessage){
     memset(destMessage->source, '\0', MAX_NAME);
     memset(destMessage->data, '\0', MAX_DATA);
     
     int idx = 0;
-    
-    //Read DATALENGTH
-    char dataLen[MAX_DATALEN + 1];
-    memset(dataLen, '\0', MAX_DATALEN + 1);
-    memcpy(dataLen, srcStr, MAX_DATALEN);
-    destMessage->size = atoi(dataLen);
-    idx = MAX_DATALEN + 1;
-
     //Read TYPE
     char type[MAX_TYPE + 1];
     memset(type, '\0', MAX_TYPE + 1);
-    memcpy(type, srcStr + idx, MAX_TYPE);
+    memcpy(type, srcStr, MAX_TYPE);
     destMessage->type = atoi(type);
     idx += MAX_TYPE + 1;
 
     //Read UsrName
     int temp = idx;
-    while(srcStr[temp] != ' ') temp++;
+    while(srcStr[temp] != ' '&&temp<=20+idx) temp++;
     memcpy(destMessage->source, srcStr + idx, temp - idx);
     idx += MAX_NAME + 1;
 
-    //Read Data
+    // //Read Data
     memcpy(destMessage->data, srcStr + idx, destMessage->size);
 }
 
@@ -86,15 +73,21 @@ int messageToString(char destStr[MAX_TOTAL], const struct message* const srcMess
     return strLength;
 }
 
-/*int main(){
-    struct message a = {11, 32, "jack", "HELLO WORLD"};
-    char stra[4+2+20+1000+3];
-    memset(stra, '\0', 4+2+20+1000+3);
-    int len = messageToString(stra, &a);
-    printf("%s   ,   %d\n", stra, len);
+//EXAMPLE MESSAGE STRING: "TYPE(2):CLIENTID(20):DATA(9999)"
+int recvMessage(int fd, struct message* const destMessage){
+    char a[MAX_DATALEN+1] = "";
+    int errorB;
+    errorB = recvPlusSize(fd, MAX_DATALEN+1, a);
+    if(errorB <= 0)return errorB;
+    if(a[4]!=':') return -2;
+    destMessage->size = stringToLength(a);
     
-    struct message b;
-    stringToMessage(stra, &b);
-    printf("%d, %d, %s, %s\n", b.size, b.type,b.source,b.data);
-    return 0;
-}*/
+    int extractSize = MAX_TYPE + MAX_NAME + destMessage->size + 2;
+    char b[extractSize];
+    memset(b, '\0', extractSize);
+    errorB = recvPlusSize(fd, extractSize, b);
+    if(errorB <= 0)return errorB;
+    stringToMessage(b, destMessage);
+
+    return errorB;
+}

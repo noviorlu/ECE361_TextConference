@@ -1,0 +1,6 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference'
+gcc -g    -c -o client.o client.c
+gcc -g   client.o   -o client
+make: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference'
+ 

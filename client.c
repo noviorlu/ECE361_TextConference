@@ -128,6 +128,7 @@ void printData(struct message* b){
     printMessage(b);
 }
 
+
 int initClient(char* ipAddr, char* port){
     int destPort = atoi(port);
     sender = socket(AF_INET, SOCK_STREAM, 0);

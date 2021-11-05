@@ -125,7 +125,7 @@ void login(struct message* b, struct message* reply){
 //client -> weight
 void processData(struct message* b, int recvFd){
     //EXIT Case
-    printf("processing data1");
+    printf("processing data12");
     if(b->type == EXIT){
         close(recvFd);
         FD_CLR(recvFd, &master);

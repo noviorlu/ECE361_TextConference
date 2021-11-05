@@ -74,14 +74,23 @@ int newConnection(){
 
 
 void query(struct message* reply){
+    printf("query running");
+    printf("currentLginUsr:%d\n",curLginUsr);
+    printf("\n\n");
+    printf("%s\n",sessionDB[0].usrName);
+    printf("%d\n",sessionDB[0].sessionId);
     char info[MAX_DATA]="";
     for(int i=0;i<=curLginUsr;i++){
-        char str[3];
-        sprintf(str, "%d", sessionDB[i].sessionId); 
-        strcat(info, strcat(str," "));
-        strcat(info, strcat(sessionDB[i].usrName,"\n"));
+        printf("%d\n",i);
+        char str[15];
+        char userName[MAX_NAME]=sessionDB[i].usrName;
+        sprintf(str, " sessionID:%d", sessionDB[i].sessionId); 
+        strcat(userName," ");
+        strcat(info, userName);
+        strcat(str," ");
+        strcat(info, str);
     }
-    message(reply, strlen(info), QUERY, "Admin", info);
+    message(reply, strlen(info), MESSAGE, "Admin", info);
     return;
 }
 
@@ -117,6 +126,8 @@ void login(struct message* b, struct message* reply){
             }else{
                 printf("added user into hall,index is %d\n",curLginUsr);
                 createSessionInfo(&sessionDB[curLginUsr], b->source,-1, 0);
+                printf("%s\n",sessionDB[0].usrName);
+                printf("%d\n",sessionDB[0].sessionId);
                 //ACK
                 message(reply, 0, LO_ACK, "Admin", "");
                 return;
@@ -139,7 +150,7 @@ void processData(struct message* b, int recvFd){
         FD_CLR(recvFd, &master);
         //clear user in SessionDB if exist
         removeUser(b->source);
-        printf("removed");
+        printf("removed\n");
         return;
     }
 
@@ -160,6 +171,7 @@ void processData(struct message* b, int recvFd){
             printf("inHall\n");
             //CHECK if in SessionDB and in Session
             if(sessionDB[sessionTuble].sessionId != -1){
+                 printf("insession\n");
                 weight = SESSION;
             }
         }
@@ -175,17 +187,17 @@ void processData(struct message* b, int recvFd){
                 login(b,&reply);
             }
             // Logout
-            if(b->type == EXIT){
-                // removeUser(b->source);
-                // printf("leave happen");
-            }
+            // if(b->type == EXIT){
+            //     // removeUser(b->source);
+            //     // printf("leave happen");
+            // }
             break;
         case HALL:
             // EXIT: 
-            if(b->type == EXIT){
-                // removeUser(b->source);
-                // printf("leave happen");
-            }
+            // if(b->type == EXIT){
+            //     // removeUser(b->source);
+            //     // printf("leave happen");
+            // }
             // JOIN SESSION:
                 // sessionOpen[sessionNum] ?= true;
             if(b->type == JOIN){

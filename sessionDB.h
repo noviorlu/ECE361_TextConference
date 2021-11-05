@@ -53,7 +53,7 @@ int findUserInSessionDB(char* userName){
     return -1;
 }
 void removeUser(char* userName){
-    printf("removing user");
+    printf("removing user\n");
     int index=findUserInSessionDB(userName);
     if(index!=-1){
         for(int i=index;i<=curLginUsr;i++){

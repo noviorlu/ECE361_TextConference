@@ -65,15 +65,47 @@ int main(){
     }
     return 0;
 }
-int new_sess(struct message* b, char* buf){//这里有问题
+void new_sess(struct message* b, char* buf){//这里有问题
+    ///createsession\08
     //printf("%s\n",buf);
-     char*sId;
-     sId =strtok (buf, " ");
-     sId = strtok(NULL, " \n");
-    
-     printf("%s\n",sId);
-    //message(b,strlen(sId),NEW_SESS,usrName,sId);
+     int id=0;
+     int i=0;
+     while(buf[i]!='\0'){
+         i++;
+     }
+     int size=0;
+     i++;
+     while(buf[i]!='\n'){
+         id=(id*10)+buf[i];
+         i++;
+     }
+    char idstr[3];
+    sprintf(idstr, "%d", id-'0'); 
+    message(b,strlen(idstr),NEW_SESS,usrName,idstr);
+    return;
 }
+
+void join(struct message* b, char* buf){//这里有问题
+    ///createsession\08
+    //printf("%s\n",buf);
+     int id=0;
+     int i=0;
+     while(buf[i]!='\0'){
+         i++;
+     }
+     int size=0;
+     i++;
+     while(buf[i]!='\n'){
+         id=(id*10)+buf[i];
+         i++;
+     }
+    char idstr[3];
+    sprintf(idstr, "%d", id-'0'); 
+    message(b,strlen(idstr),JOIN,usrName,idstr);
+    return;
+}
+
+
 int login(struct message* b, char* buf){
     char* cmd[4];
     for(int i=0; i<4; i++) {
@@ -122,11 +154,12 @@ void processData(){
                 message(&b, 0, QUERY, usrName, "");
                 break;
             case NEW_SESS:
-                 message(&b, 1, NEW_SESS, usrName, "1");
-                 //new_sess(&b,buf);
+                 //message(&b, 1, NEW_SESS, usrName, "1");
+                 new_sess(&b,buf);
                 break;
             case JOIN:
-                 message(&b, 1, JOIN, usrName, "1");
+                 //message(&b, 1, JOIN, usrName, "1");
+                 join(&b,buf);
                  break;
             case LEAVE_SESS:
                  message(&b, 0, LEAVE_SESS, usrName, "");
@@ -168,7 +201,7 @@ int cmdToEnum(char* data){
         return LOGIN; 
     else if(strcmp(data, "/logout") == 0) 
         return EXIT;
-    else if(strcmp(data, "/joinsession") == 0) 
+    else if(strcmp(data, "/joinsession") == 0) //
         return JOIN;
     else if(strcmp(data, "/leavesession") == 0) 
         return LEAVE_SESS;

@@ -8,12 +8,12 @@
 #include <netdb.h>
 #include "sessionDB.h"
 #include "message.h"
-
+#include "usrDB.h"
 #pragma region CONSTVAR
 size_t listener;
 fd_set master;
 int fdmax;
-int userSize=0;
+int curLginUsr=0;
 
 #pragma endregion
 
@@ -70,48 +70,56 @@ void newConnection(){
     }
 }
 
-void login(struct message* b, int sockfd){
-    char[MAX_PSSWD] password=b->data;
-    char[MAX_NAME] name=b->source;
-
+void login(struct message* b, struct message* reply){
     for(int i=0;i<3;i++){
         //in userDatabase
-        if(usrDB[i].name==name){
-            //has correct password
-            if(usrDB[i].password==password){
-                for(int i=0;i<userSize;i++){
-                    //already in session
-                    if(sessionDB[i].usrName==name){
-                        //NACK, Already logged in
-                        sendhelper(socketfd,18,2,"Server","user has logged in")
-                    }else{
-                        userSize++;
-                        if(userSize>=100){
-                            //NACK, FULL
-                        }else{
-                            struct sessionInfo newUser = {name, -1}; 
-                            sessionDB[userSize]=newUser;
-                            //ACK
-                        }
-                    }
-                }
+        if(strcmp(usrDB[i].password,b->data)==0 && strcmp(usrDB[i].usrId,b->source)==0){
+            //has correct password and username
+            for(int i=0;i<curLginUsr && strcmp(sessionDB[i].usrName, b->source)==0; i++){
+                //already in session & NACK, Already logged in
+                message(reply, 17, LO_NAK, "Admin", "Already logged in");
+                return;
+            }
+            curLginUsr++;
+            if(curLginUsr>=100){
+                //NACK, FULL
+                curLginUsr--;
+                message(reply, 12, LO_NAK, "Admin", "Server full");
+                return;
+            }else{
+                createSessionInfo(&sessionDB[curLginUsr], b->source,-1);
+                //ACK
+                message(reply, 0, LO_ACK, "Admin", "");
+                return;
             }
         }
     }
+    //not find
+    message(reply, 27, LO_NAK, "Admin", "username/password not found");
+    return;
 }
-void exit(){
+// void exit(){
     
-}
-void dataProcess(struct message* b, int i){
+// }
+void dataProcess(struct message* b, int recvFd){
     struct message reply;
-    switch(b.type)
+    switch(b->type)
     {
         case LOGIN:
-            login(b,i);
+            login(b,&reply);
         break;
         case EXIT:
         ;
         break;
+        case MESSAGE:
+
+        return;
+    }
+    char array[MAX_TOTAL];
+    messageToString(array,&reply);
+    printf("message Sending: %s\n", array);
+    if(send(recvFd,array,strlen(array),0) == -1){
+        printf("Send message to Socket: %d failed\n", recvFd);
     }
 }
 void monitor(int fdmax, fd_set *restrict read_fds){
@@ -136,15 +144,11 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                     close(i); // bye!
                     FD_CLR(i, &master); // remove from master set
                 }else{
-<<<<<<< HEAD
                     dataProcess(&b,i);
-=======
-                    //dataProcess(&b);
-                    printf("%d, ", b.size);
-                    printf("%d, ", b.type);
-                    printf("%s, ", b.source);
-                    printf("%s\n", b.data);
->>>>>>> 74af42a243a30f806453adc0f0bbec05af78b301
+                    // printf("size:%d, ", b.size);
+                    // printf("type:%d, ", b.type);
+                    // printf("source:%s, ", b.source);
+                    // printf("data:%s\n", b.data);
                 }
             }
         }

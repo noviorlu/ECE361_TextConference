@@ -23,25 +23,13 @@ struct message {
     unsigned char source[MAX_NAME];
     unsigned char data[MAX_DATA];
 };
-<<<<<<< HEAD
 
-void sendhelper(int sender, unsigned int size,unsigned int type,
-    unsigned char source[MAX_NAME], unsigned char data[MAX_DATA],){
-    struct message b = {size,type,source,data};
-    char str[MAX_TOTAL] = "";
-    messageToString(str, &b);
-    printf("%s\n", str);
-    send(sender, str, strlen(str), 0);
-}
-
-=======
 void message(struct message* b, int size, int type, char* source, char* data){
     b->size = size;
     b->type = type;
     strcpy(b->source, source);
     strcpy(b->data, data);
 }
->>>>>>> 74af42a243a30f806453adc0f0bbec05af78b301
 int recvPlusSize(int fd, int size, char destStr[size + 1]){
     int errorB = 0;
     for(int i = 0; i < size;){
@@ -81,6 +69,7 @@ void stringToMessage(const char * const srcStr, struct message* const destMessag
     memcpy(destMessage->data, srcStr + idx, destMessage->size);
 }
 
+//Convert message into String from Source Message Pointer to Destination String
 int messageToString(char destStr[MAX_TOTAL], const struct message* const srcMessage){
     memset(destStr, '\0', MAX_TOTAL);
 
@@ -105,4 +94,9 @@ int recvMessage(int fd, struct message* const destMessage){
     if(errorB <= 0)return errorB;
     stringToMessage(b, destMessage);
     return errorB;
+}
+
+void createStr(char* deststr, struct message* b){
+    messageToString(deststr, b);
+    printf("%s\n", deststr);
 }

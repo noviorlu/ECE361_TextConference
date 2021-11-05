@@ -49,9 +49,10 @@ int main(){
                 if(errorB > 0) printData(&b);
                 else{
                     if(errorB == 0){
-                        printf("Server socket %d connection Closed\n", sender);
+                        printf("Sender socket %d connection Closed\n", sender);
                         close(sender); // bye!
                         FD_CLR(sender, &master); // remove from master set
+                        fdmax = STDIN;
                     }else if(errorB == -1) perror("recv");
                     else if(errorB == -2){
                         printf("Invalid Message, client was hacked");

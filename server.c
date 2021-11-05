@@ -124,6 +124,14 @@ void login(struct message* b, struct message* reply){
 // }
 //client -> weight
 void processData(struct message* b, int recvFd){
+    //EXIT Case
+    if(b->type == EXIT){
+        close(recvFd);
+        FD_CLR(recvFd, &master);
+        //clear user in SessionDB if exist
+        return;
+    }
+
     printf("Recv message: ");
     printMessage(b);
     
@@ -143,7 +151,6 @@ void processData(struct message* b, int recvFd){
             }
         }
     }
-    
     switch(weight){
         case DEFAULT:
             // NAK USER NOT EXIST
@@ -154,6 +161,7 @@ void processData(struct message* b, int recvFd){
             if(b->type == LOGIN){
                 login(b,&reply);
             }
+            // Logout
             break;
         case HALL:
             // EXIT: 

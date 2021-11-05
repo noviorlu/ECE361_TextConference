@@ -69,7 +69,6 @@ void newConnection(){
         );
     }
 }
-
 void login(struct message* b, struct message* reply){
     for(int i=0;i<3;i++){
         //in userDatabase

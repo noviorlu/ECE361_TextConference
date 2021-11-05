@@ -53,7 +53,7 @@ int main(){
                     else if(errorB == -2){
                         printf("Invalid Message, client was hacked");
                         close(sender); // bye!
-                        FD_CLR(sender, &master); // remove from master set
+                        FD_CLR(sender, &master); //remove from master set
                     }
                 }
             }
@@ -132,7 +132,11 @@ void processData(){
     send(sender, str, strlen(str), 0);
 }
 void printData(struct message* b){
-
+    //Print recved message from server side
+    printf("size:%d, ", b->size);
+    printf("type:%d, ", b->type);
+    printf("source:%s, ", b->source);
+    printf("data:%s\n", b->data);
 }
 
 int initClient(char* ipAddr, char* port){

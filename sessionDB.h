@@ -8,6 +8,14 @@
 // };
 struct sessionInfo{
     char usrName[MAX_NAME];
+    //int sockFd;
     int sessionId;
 };
-struct sessionInfo* sessionDB[100]; 
+
+void createSessionInfo(struct sessionInfo* newUser, char name[],int id){
+    strcpy(newUser->usrName,name);
+    newUser->sessionId=id;
+    return;
+}
+
+struct sessionInfo sessionDB[100]; 

@@ -124,6 +124,9 @@ void login(struct message* b, struct message* reply){
 // }
 //client -> weight
 void processData(struct message* b, int recvFd){
+    printf("Recv message: ");
+    printMessage(b);
+    
     struct message reply;
     
     enum WEIGHT weight = DEFAULT;
@@ -168,18 +171,9 @@ void processData(struct message* b, int recvFd){
         break;
     }
 
-    // switch(b->type)
-    // {
-    //     case LOGIN:
-    //         login(b,&reply);
-    //     break;
-    //     case EXIT:
-    //     ;
-    //     break;
-    //     case MESSAGE:
+    printf("Sending message: ");
+    printMessage(b);
 
-    //     return;
-    // }
     char array[MAX_TOTAL];
     messageToString(array,&reply);
     printf("message Sending: %s\n", array);
@@ -210,11 +204,7 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                     close(i); // bye!
                     FD_CLR(i, &master); // remove from master set
                 }else{
-                    //processData(&b,i);
-                    // printf("size:%d, ", b.size);
-                    // printf("type:%d, ", b.type);
-                    // printf("source:%s, ", b.source);
-                    // printf("data:%s\n", b.data);
+                    processData(&b,i);
                 }
             }
         }

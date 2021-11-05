@@ -95,13 +95,13 @@ void processData(){
     buf = strtok(readData, " \n");
     
     int type;
-    
+
     if(buf[0] == '/'){
         type = cmdToEnum(buf);
         if(type == -1){
             printf("Invalid cmd, please reType\n"); 
             return;
-        } 
+        }
         switch (type){
             case LOGIN:
                 if(login(&b, buf) == -1)return;
@@ -114,17 +114,17 @@ void processData(){
         //sendMessage
         type = MESSAGE;
     }
-    
+    printf("Sending message: ");
+    printMessage(&b);
+
     char str[MAX_TOTAL] = "";
     messageToString(str, &b);
     send(sender, str, strlen(str), 0);
 }
 void printData(struct message* b){
     //Print recved message from server side
-    printf("size:%d, ", b->size);
-    printf("type:%d, ", b->type);
-    printf("source:%s, ", b->source);
-    printf("data:%s\n", b->data);
+    printf("Recv message: ");
+    printMessage(b);
 }
 
 int initClient(char* ipAddr, char* port){

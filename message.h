@@ -96,7 +96,9 @@ int recvMessage(int fd, struct message* const destMessage){
     return errorB;
 }
 
-void createStr(char* deststr, struct message* b){
-    messageToString(deststr, b);
-    printf("%s\n", deststr);
+void printMessage(struct message* b){
+    printf("size:%d, ", b->size);
+    printf("type:%d, ", b->type);
+    printf("source:%s, ", b->source);
+    printf("data:%s\n", b->data);
 }

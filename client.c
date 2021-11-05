@@ -50,7 +50,7 @@ int main(){
                 else{
                     if(errorB == 0){
                         printf("Sender socket %d connection Closed\n", sender);
-                        close(sender); // bye!
+                       close(sender); // bye!
                         FD_CLR(sender, &master); // remove from master set
                         fdmax = STDIN;
                     }else if(errorB == -1) perror("recv");
@@ -109,7 +109,7 @@ void processData(){
                 break;
             case EXIT:
                 message(&b, 0, EXIT, usrName, "");
-            break;
+                break;
         }
     }else{
         //sendMessage

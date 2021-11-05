@@ -125,10 +125,13 @@ void login(struct message* b, struct message* reply){
 //client -> weight
 void processData(struct message* b, int recvFd){
     //EXIT Case
+    printf("processing data1");
     if(b->type == EXIT){
         close(recvFd);
         FD_CLR(recvFd, &master);
         //clear user in SessionDB if exist
+        removeUser(b->source);
+        printf("kkhkjkjhkjhkjh");
         return;
     }
 
@@ -162,12 +165,23 @@ void processData(struct message* b, int recvFd){
                 login(b,&reply);
             }
             // Logout
+            if(b->type == EXIT){
+                // removeUser(b->source);
+                // printf("leave happen");
+            }
             break;
         case HALL:
             // EXIT: 
+            if(b->type == EXIT){
+                // removeUser(b->source);
+                // printf("leave happen");
+            }
             // JOIN SESSION:
                 // sessionOpen[sessionNum] ?= true;
             // QUERY:
+            if(b->type == QUERY){
+                printf("query happen");
+            }
             // NEW SESSION:
                 // sessionOpen[sessionNum] ?= true;
         break;

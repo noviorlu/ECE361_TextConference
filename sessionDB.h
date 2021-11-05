@@ -27,7 +27,7 @@ void createSessionInfo(struct sessionInfo* newUser, char name[],int id, int weig
     newUser->weight = weight;
 }
 
-struct sessionInfo sessionDB[100]; 
+ struct sessionInfo sessionDB[100]; 
 //bool sessionOpen[100];
 int curLginUsr = 0;
 
@@ -40,3 +40,16 @@ int findUserInSessionDB(char* userName){
     }
     return -1;
 }
+void removeUser(char* userName){
+    printf("removing user");
+    int index=findUserInSessionDB(userName);
+    if(index!=-1){
+        for(int i=index;i<=curLginUsr;i++){
+            memcpy(sessionDB[i].usrName, sessionDB[i+1].usrName, MAX_NAME);
+            sessionDB[i].sessionId=sessionDB[i+1].sessionId;
+            sessionDB[i].weight=sessionDB[i+1].weight;
+        }
+    }
+    curLginUsr--;
+}
+

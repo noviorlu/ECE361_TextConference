@@ -22,6 +22,8 @@ char usrName[MAX_NAME];
 #pragma endregion
 
 int initClient(char* ipAddr, char* port);
+int cmdToEnum(char* data);
+
 void processData();
 void printData(struct message* b);
 
@@ -41,6 +43,7 @@ int main(){
             if(FD_ISSET(STDIN, &read_fds)){
                 processData();
             }else{
+                printf("recving data from server\n");
                 struct message b;
                 int errorB = recvMessage(sender, &b);
                 if(errorB > 0) printData(&b);
@@ -62,25 +65,6 @@ int main(){
     return 0;
 }
 
-int cmdToEnum(char* data){
-    if(strcmp(data, "/login") == 0) 
-        return LOGIN; 
-    else if(strcmp(data, "/logout") == 0) 
-        return EXIT;
-    else if(strcmp(data, "/joinsession") == 0) 
-        return JOIN;
-    else if(strcmp(data, "/leavesession") == 0) 
-        return LEAVE_SESS;
-    else if(strcmp(data, "/createsession") == 0) 
-        return NEW_SESS;
-    else if(strcmp(data, "/list") == 0) 
-        return QUERY;
-    else if(strcmp(data, "/quit") == 0){
-        printf("Quiting Session......Client end.\n");
-        exit(0);
-    }
-    return -1;
-}
 int login(struct message* b, char* buf){
     char* cmd[4];
     for(int i=0; i<4; i++) {
@@ -90,7 +74,12 @@ int login(struct message* b, char* buf){
     if((initClient(cmd[2], cmd[3])) == -1){
         printf("Cannot connect to server, Please Retry\n");
         return -1;
-    }else printf("Connection Successful\n");
+    }else {
+        printf("Connection Successful\n");
+        fdmax = sender;
+        FD_SET(sender, &master);
+    }
+    
     memset(usrName, 0, MAX_NAME);
     strcpy(usrName, cmd[0]);
     message(b, strlen(cmd[1]), LOGIN, usrName, cmd[1]);
@@ -106,7 +95,7 @@ void processData(){
     buf = strtok(readData, " \n");
     
     int type;
-
+    
     if(buf[0] == '/'){
         type = cmdToEnum(buf);
         if(type == -1){
@@ -128,7 +117,6 @@ void processData(){
     
     char str[MAX_TOTAL] = "";
     messageToString(str, &b);
-    printf("%s\n", str);
     send(sender, str, strlen(str), 0);
 }
 void printData(struct message* b){
@@ -149,4 +137,25 @@ int initClient(char* ipAddr, char* port){
     inet_pton(AF_INET, ipAddr, &servAddr.sin_addr);
 
     return connect(sender, (const struct sockaddr *) &servAddr, sizeof(servAddr));
+}
+
+// Convert String into TYPE enum
+int cmdToEnum(char* data){
+    if(strcmp(data, "/login") == 0) 
+        return LOGIN; 
+    else if(strcmp(data, "/logout") == 0) 
+        return EXIT;
+    else if(strcmp(data, "/joinsession") == 0) 
+        return JOIN;
+    else if(strcmp(data, "/leavesession") == 0) 
+        return LEAVE_SESS;
+    else if(strcmp(data, "/createsession") == 0) 
+        return NEW_SESS;
+    else if(strcmp(data, "/list") == 0) 
+        return QUERY;
+    else if(strcmp(data, "/quit") == 0){
+        printf("Quiting Session......Client end.\n");
+        exit(0);
+    }
+    return -1;
 }

@@ -13,14 +13,13 @@
 size_t listener;
 fd_set master;
 int fdmax;
-int curLginUsr=0;
-
 #pragma endregion
 
 void initServer(char* PORT);
-void newConnection();
+int newConnection();
 void monitor(int fdmax, fd_set *restrict read_fds);
 void *get_in_addr(struct sockaddr *sa);
+
 int main(int argc, char *argv[]){
     //get port via argv
     listener = atoi(argv[1]);
@@ -46,7 +45,8 @@ int main(int argc, char *argv[]){
         monitor(fdmax, &read_fds);
     }
 }
-void newConnection(){
+// return connected FD
+int newConnection(){
     struct sockaddr_storage remoteaddr;
     socklen_t addrlen = sizeof remoteaddr;
     char remoteIP[INET6_ADDRSTRLEN];
@@ -68,7 +68,29 @@ void newConnection(){
             newfd
         );
     }
+    return newfd;
 }
+
+// void query(struct message* reply){
+//     char info[MAX_DATA];
+//     for(int i=0;i<=curLginUsr;i++){
+//         char sessionInfo[]=sessionDB[i].sessionId+" "+sessionDB[i].usrName+"/n";
+//         int size=strlen(sessionInfo);
+//         memset(info,sessionInfo,1);
+//         info=info+size;
+//     }
+//     message(reply, ???, QUERY, "Admin", charinfo);
+//     return;
+// }
+
+void joinSession(struct message* reply,struct sessionInfo* user, int newSession){
+    user->sessionId=newSession;
+    message(reply, 0, JN_ACK, "Admin", "");
+}
+
+
+
+
 void login(struct message* b, struct message* reply){
     for(int i=0;i<3;i++){
         //in userDatabase
@@ -86,7 +108,7 @@ void login(struct message* b, struct message* reply){
                 message(reply, 12, LO_NAK, "Admin", "Server full");
                 return;
             }else{
-                createSessionInfo(&sessionDB[curLginUsr], b->source,-1);
+                createSessionInfo(&sessionDB[curLginUsr], b->source,-1, 0);
                 //ACK
                 message(reply, 0, LO_ACK, "Admin", "");
                 return;
@@ -100,20 +122,64 @@ void login(struct message* b, struct message* reply){
 // void exit(){
     
 // }
-void dataProcess(struct message* b, int recvFd){
+//client -> weight
+void processData(struct message* b, int recvFd){
     struct message reply;
-    switch(b->type)
-    {
-        case LOGIN:
-            login(b,&reply);
-        break;
-        case EXIT:
-        ;
-        break;
-        case MESSAGE:
-
-        return;
+    
+    enum WEIGHT weight = DEFAULT;
+    //Check if the username is in the userDB
+    if(findUserInUsrDB(b->source) != -1){
+        weight = REGESTER;
+        int sessionTuble;
+        //CHECK if in the sessionDB (in session or in hall)
+        if((sessionTuble = findUserInSessionDB(b->source)) != -1){
+            weight = HALL;
+            //CHECK if in SessionDB and in Session
+            if(sessionDB[sessionTuble].sessionId != -1){
+                weight = SESSION;
+            }
+        }
     }
+    
+    switch(weight){
+        case DEFAULT:
+            // NAK USER NOT EXIST
+            message(&reply, 14, LO_NAK, "Admin", "User Not Exist");
+        break;
+        case REGESTER:
+            // Login: check passwd
+            if(b->type == LOGIN){
+                login(b,&reply);
+            }
+            break;
+        case HALL:
+            // EXIT: 
+            // JOIN SESSION:
+                // sessionOpen[sessionNum] ?= true;
+            // QUERY:
+            // NEW SESSION:
+                // sessionOpen[sessionNum] ?= true;
+        break;
+        case SESSION:
+            // EXIT:
+            // QUIT:
+            // MESSAGE:
+            // QUERY:
+        break;
+    }
+
+    // switch(b->type)
+    // {
+    //     case LOGIN:
+    //         login(b,&reply);
+    //     break;
+    //     case EXIT:
+    //     ;
+    //     break;
+    //     case MESSAGE:
+
+    //     return;
+    // }
     char array[MAX_TOTAL];
     messageToString(array,&reply);
     printf("message Sending: %s\n", array);
@@ -126,8 +192,9 @@ void monitor(int fdmax, fd_set *restrict read_fds){
     for(int i = 0; i <= fdmax; i++) {
         if (FD_ISSET(i, read_fds)){ // we got one!!
             if (i == listener) {
+                printf("handle new connections\n");
                 // handle new connections
-                newConnection();
+                int recvFd = newConnection();
             }
             else {
                 struct message b;
@@ -143,7 +210,7 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                     close(i); // bye!
                     FD_CLR(i, &master); // remove from master set
                 }else{
-                    dataProcess(&b,i);
+                    //processData(&b,i);
                     // printf("size:%d, ", b.size);
                     // printf("type:%d, ", b.type);
                     // printf("source:%s, ", b.source);

@@ -194,7 +194,7 @@ void processData(struct message* b, int recvFd){
                    joinSession(b->source, atoi(b->data));
                    printf("%s join session %i",b->source,atoi(b->data));
                }else{
-                   message(&reply, 21, JN_NAK, "Admin", "the session is not open");
+                   message(&reply, 23, JN_NAK, "Admin", "the session is not open");
                }
             }
             // QUERY:

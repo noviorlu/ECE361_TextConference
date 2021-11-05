@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h> /* memset */
 #include <unistd.h>
 #include <sys/types.h>
@@ -71,21 +72,27 @@ int newConnection(){
     return newfd;
 }
 
-// void query(struct message* reply){
-//     char info[MAX_DATA];
-//     for(int i=0;i<=curLginUsr;i++){
-//         char sessionInfo[]=sessionDB[i].sessionId+" "+sessionDB[i].usrName+"/n";
-//         int size=strlen(sessionInfo);
-//         memset(info,sessionInfo,1);
-//         info=info+size;
-//     }
-//     message(reply, ???, QUERY, "Admin", charinfo);
-//     return;
-// }
 
-void joinSession(struct message* reply,struct sessionInfo* user, int newSession){
-    user->sessionId=newSession;
-    message(reply, 0, JN_ACK, "Admin", "");
+void query(struct message* reply){
+    char info[MAX_DATA]="";
+    for(int i=0;i<=curLginUsr;i++){
+        char str[3];
+        sprintf(str, "%d", sessionDB[i].sessionId); 
+        strcat(info, strcat(str," "));
+        strcat(info, strcat(sessionDB[i].usrName,"\n"));
+    }
+    message(reply, strlen(info), QUERY, "Admin", info);
+    return;
+}
+
+void joinSession(char*userName, int newSession){
+    for(int i=0;i<=curLginUsr;i++){
+        if(strcmp(sessionDB[i].usrName, userName)==0){
+            sessionDB[i].sessionId=newSession;
+            return;
+        }
+    }
+    return;
 }
 
 
@@ -108,6 +115,7 @@ void login(struct message* b, struct message* reply){
                 message(reply, 12, LO_NAK, "Admin", "Server full");
                 return;
             }else{
+                printf("added user into hall,index is %d\n",curLginUsr);
                 createSessionInfo(&sessionDB[curLginUsr], b->source,-1, 0);
                 //ACK
                 message(reply, 0, LO_ACK, "Admin", "");
@@ -125,13 +133,13 @@ void login(struct message* b, struct message* reply){
 //client -> weight
 void processData(struct message* b, int recvFd){
     //EXIT Case
-    printf("processing data12");
+    printf("processing data\n");
     if(b->type == EXIT){
         close(recvFd);
         FD_CLR(recvFd, &master);
         //clear user in SessionDB if exist
         removeUser(b->source);
-        printf("kkhkjkjhkjhkjh");
+        printf("removed");
         return;
     }
 
@@ -144,10 +152,12 @@ void processData(struct message* b, int recvFd){
     //Check if the username is in the userDB
     if(findUserInUsrDB(b->source) != -1){
         weight = REGESTER;
+        printf("inRegister\n");
         int sessionTuble;
         //CHECK if in the sessionDB (in session or in hall)
         if((sessionTuble = findUserInSessionDB(b->source)) != -1){
             weight = HALL;
+            printf("inHall\n");
             //CHECK if in SessionDB and in Session
             if(sessionDB[sessionTuble].sessionId != -1){
                 weight = SESSION;
@@ -178,23 +188,40 @@ void processData(struct message* b, int recvFd){
             }
             // JOIN SESSION:
                 // sessionOpen[sessionNum] ?= true;
+            if(b->type == JOIN){
+               if(sessionOpen[atoi(b->data)]==true){
+                   message(&reply, 0, JN_ACK, "Admin", "");
+                   joinSession(b->source, atoi(b->data));
+                   printf("%s join session %i",b->source,atoi(b->data));
+               }else{
+                   message(&reply, 21, JN_NAK, "Admin", "the session is not open");
+               }
+            }
             // QUERY:
             if(b->type == QUERY){
-                printf("query happen");
+               query(&reply);
             }
             // NEW SESSION:
                 // sessionOpen[sessionNum] ?= true;
+            if(b->type == NEW_SESS){
+                printf("%i\n",atoi(b->data));
+                createnewSession(atoi(b->data));
+                message(&reply, 0, NS_ACK, "Admin", "");
+            }
         break;
         case SESSION:
             // EXIT:
             // QUIT:
             // MESSAGE:
             // QUERY:
+            if(b->type == QUERY){
+               query(&reply);
+            }
         break;
     }
 
-    printf("Sending message: ");
-    printMessage(b);
+    // printf("Received message: ");
+    // printMessage(b);
 
     char array[MAX_TOTAL];
     messageToString(array,&reply);

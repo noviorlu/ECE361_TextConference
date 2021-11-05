@@ -28,12 +28,24 @@ void createSessionInfo(struct sessionInfo* newUser, char name[],int id, int weig
 }
 
  struct sessionInfo sessionDB[100]; 
-//bool sessionOpen[100];
-int curLginUsr = 0;
+ bool sessionOpen[100]={ false };;
+int curLginUsr = -1;
+
+void createnewSession(int index){
+    if(sessionOpen[index]!=true){
+        printf("successfully created session at %d\n",index);
+        sessionOpen[index]=true;
+        return;
+    }
+    return;
+}
+
+
 
 // return -1 if not found
 int findUserInSessionDB(char* userName){
-    for(int i=0;i<curLginUsr;i++){
+
+    for(int i=0;i<=curLginUsr;i++){
         if(strcmp(sessionDB[i].usrName, userName)==0){
             return i;
         }

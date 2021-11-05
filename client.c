@@ -65,7 +65,15 @@ int main(){
     }
     return 0;
 }
-
+int new_sess(struct message* b, char* buf){//这里有问题
+    //printf("%s\n",buf);
+     char*sId;
+     sId =strtok (buf, " ");
+     sId = strtok(NULL, " \n");
+    
+     printf("%s\n",sId);
+    //message(b,strlen(sId),NEW_SESS,usrName,sId);
+}
 int login(struct message* b, char* buf){
     char* cmd[4];
     for(int i=0; i<4; i++) {
@@ -110,6 +118,19 @@ void processData(){
             case EXIT:
                 message(&b, 0, EXIT, usrName, "");
                 break;
+            case QUERY:
+                message(&b, 0, QUERY, usrName, "");
+                break;
+            case NEW_SESS:
+                 message(&b, 1, NEW_SESS, usrName, "1");
+                 //new_sess(&b,buf);
+                break;
+            case JOIN:
+                 message(&b, 1, JOIN, usrName, "1");
+                 break;
+            case LEAVE_SESS:
+                 message(&b, 0, LEAVE_SESS, usrName, "");
+                 break;
         }
     }else{
         //sendMessage
@@ -143,7 +164,7 @@ int initClient(char* ipAddr, char* port){
 
 // Convert String into TYPE enum
 int cmdToEnum(char* data){
-    if(strcmp(data, "/login") == 0) 
+    if(strcmp(data, "/login") == 0) //
         return LOGIN; 
     else if(strcmp(data, "/logout") == 0) 
         return EXIT;
@@ -151,9 +172,9 @@ int cmdToEnum(char* data){
         return JOIN;
     else if(strcmp(data, "/leavesession") == 0) 
         return LEAVE_SESS;
-    else if(strcmp(data, "/createsession") == 0) 
+    else if(strcmp(data, "/createsession") == 0) //
         return NEW_SESS;
-    else if(strcmp(data, "/list") == 0) 
+    else if(strcmp(data, "/list") == 0) //
         return QUERY;
     else if(strcmp(data, "/quit") == 0){
         printf("Quiting Session......Client end.\n");

@@ -145,7 +145,7 @@ void processData(){
         }
         switch (type){
             case LOGIN:
-                if(login(&b, buf) == -1)return;
+                if(login(&b, buf) == -1) return;
                 break;
             case EXIT:
                 message(&b, 0, EXIT, usrName, "");

@@ -7,9 +7,10 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include "sessionDB.h"
+#include "database/sessionDB.h"
 #include "message.h"
-#include "usrDB.h"
+#include "database/usrDB.h"
+
 #pragma region CONSTVAR
 size_t listener;
 fd_set master;
@@ -72,28 +73,6 @@ int newConnection(){
     return newfd;
 }
 
-
-void query(struct message* reply){
-    printf("query running");
-    printf("currentLginUsr:%d\n",curLginUsr);
-    printf("\n\n");
-    printf("%s\n",sessionDB[0].usrName);
-    printf("%d\n",sessionDB[0].sessionId);
-    char info[MAX_DATA]="";
-    for(int i=0;i<=curLginUsr;i++){
-        printf("%d\n",i);
-        char str[15];
-        char userName[MAX_NAME]=sessionDB[i].usrName;
-        sprintf(str, " sessionID:%d", sessionDB[i].sessionId); 
-        strcat(userName," ");
-        strcat(info, userName);
-        strcat(str," ");
-        strcat(info, str);
-    }
-    message(reply, strlen(info), MESSAGE, "Admin", info);
-    return;
-}
-
 void joinSession(char*userName, int newSession){
     for(int i=0;i<=curLginUsr;i++){
         if(strcmp(sessionDB[i].usrName, userName)==0){
@@ -103,9 +82,6 @@ void joinSession(char*userName, int newSession){
     }
     return;
 }
-
-
-
 
 void login(struct message* b, struct message* reply){
     for(int i=0;i<3;i++){
@@ -117,7 +93,6 @@ void login(struct message* b, struct message* reply){
                 message(reply, 17, LO_NAK, "Admin", "Already logged in");
                 return;
             }
-            curLginUsr++;
             if(curLginUsr>=100){
                 //NACK, FULL
                 curLginUsr--;
@@ -125,7 +100,7 @@ void login(struct message* b, struct message* reply){
                 return;
             }else{
                 printf("added user into hall,index is %d\n",curLginUsr);
-                createSessionInfo(&sessionDB[curLginUsr], b->source,-1, 0);
+                createUserInfo(&sessionDB[curLginUsr], b->source,-1, HALL);
                 printf("%s\n",sessionDB[0].usrName);
                 printf("%d\n",sessionDB[0].sessionId);
                 //ACK
@@ -185,19 +160,11 @@ void processData(struct message* b, int recvFd){
             // Login: check passwd
             if(b->type == LOGIN){
                 login(b,&reply);
+            }else{
+                message(&reply, 14, LO_NAK, "Admin", "User Not Exist");
             }
-            // Logout
-            // if(b->type == EXIT){
-            //     // removeUser(b->source);
-            //     // printf("leave happen");
-            // }
             break;
         case HALL:
-            // EXIT: 
-            // if(b->type == EXIT){
-            //     // removeUser(b->source);
-            //     // printf("leave happen");
-            // }
             // JOIN SESSION:
                 // sessionOpen[sessionNum] ?= true;
             if(b->type == JOIN){
@@ -211,7 +178,7 @@ void processData(struct message* b, int recvFd){
             }
             // QUERY:
             if(b->type == QUERY){
-               query(&reply);
+               //query(&reply);
             }
             // NEW SESSION:
                 // sessionOpen[sessionNum] ?= true;
@@ -227,7 +194,7 @@ void processData(struct message* b, int recvFd){
             // MESSAGE:
             // QUERY:
             if(b->type == QUERY){
-               query(&reply);
+               //query(&reply);
             }
         break;
     }

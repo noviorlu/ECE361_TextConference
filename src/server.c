@@ -7,9 +7,9 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include "database/sessionDB.h"
-#include "message.h"
-#include "database/usrDB.h"
+#include "../include/sessionDB.h"
+#include "../include/message.h"
+#include "../include/usrDB.h"
 
 #pragma region CONSTVAR
 size_t listener;

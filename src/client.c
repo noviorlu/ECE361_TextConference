@@ -10,7 +10,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
-#include "message.h"
+#include "../include/message.h"
 
 #pragma region CONSTVAR
 #define STDIN 0

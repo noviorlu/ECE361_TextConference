@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.tcc": "c",
-        "string": "c",
-        "unordered_map": "c",
-        "string_view": "c"
-    }
-}

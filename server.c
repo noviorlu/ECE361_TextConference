@@ -82,6 +82,32 @@ void joinSession(char*userName, int newSession){
     }
     return;
 }
+void query(struct message* reply){
+    int size=(MAX_NAME+MAX_SESSIONId)*1000+(MAX_SESSIONId*100)+5000;
+    char message[size]="User currently online: \n";
+    for(int i=0;i<1000;i++){
+        if(usrDB[i]!=NULL){
+            char name[MAX_NAME];
+            char sessionName[MAX_SESSIONId];
+            strcpy(name,usrDB[i]->usrName);
+            strcpy(sessionName,usrDB[i]->sessionId);
+            strcat(message,name);
+            strcat(message," ");
+            strcat(message,sessionName);
+            strcat(message,"\n");
+        }
+    }
+    strcat(message,"Sessions currently avaliable \n")
+    for (int i = 0; i < 100; i++)
+    {
+        if(strlen(sessionDB[i])!=0){
+            strcat(message, sessionDB[i]);
+            strcat(message, "\n");
+        }
+    }
+    message(reply, size , QUERY, "Admin", message);
+    return;
+}
 
 void login(struct message* b, struct message* reply){
     for(int i=0;i<3;i++){

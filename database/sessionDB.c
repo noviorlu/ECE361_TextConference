@@ -10,16 +10,28 @@ int createUserInfo(char name[], int sockFd){
     }
     userDB[idx] = (UserInfo *)malloc(sizeof(UserInfo));
     strcpy(userDB[idx]->usrName,name);
-    memset(userDB[idx]->sessionId, 0, MAX_SESSION);
+    memset(userDB[idx]->sessionId, 0, MAX_SESSIONId);
     userDB[idx]->sockFd = sockFd;
     userDB[idx]->weight = 0;
     return 0;
 }
+int deleteSession(char sessionName[20]){
+    for(int i=0; i<100; i++){
+        if(strcmp(sessionName, sessionDB[i])==0){
+            //delete all usrs in the session
 
+
+            //delete session
+            sessionDB[i]=="";
+            return;
+        }
+    }
+}
 int createnewSession(char sessionName[20]){
     int idx = 0;
     for(int i = 0; i < 100; i++){
-        if(strlen(sessionDB[idx]) == 0)idx = i;
+        if(strlen(sessionDB[i]) == 0)
+            idx = i;
         if(strcmp(sessionName, sessionDB[i])==0){
             printf("SessionDB: sessionName already\n");
             return -1;

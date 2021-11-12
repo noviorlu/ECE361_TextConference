@@ -83,35 +83,50 @@ void joinSession(char*userName, int newSession){
     return;
 }
 
-void login(struct message* b, struct message* reply){
-    for(int i=0;i<3;i++){
-        //in userDatabase
-        if(strcmp(usrDB[i].password,b->data)==0 && strcmp(usrDB[i].usrId,b->source)==0){
-            //has correct password and username
-            for(int i=0;i<curLginUsr && strcmp(sessionDB[i].usrName, b->source)==0; i++){
-                //already in session & NACK, Already logged in
-                message(reply, 17, LO_NAK, "Admin", "Already logged in");
-                return;
-            }
-            if(curLginUsr>=100){
-                //NACK, FULL
-                curLginUsr--;
-                message(reply, 12, LO_NAK, "Admin", "Server full");
-                return;
-            }else{
-                printf("added user into hall,index is %d\n",curLginUsr);
-                createUserInfo(&sessionDB[curLginUsr], b->source,-1, HALL);
-                printf("%s\n",sessionDB[0].usrName);
-                printf("%d\n",sessionDB[0].sessionId);
-                //ACK
-                message(reply, 0, LO_ACK, "Admin", "");
-                return;
-            }
+void 
+
+void query(struct message* reply){
+    int size=(MAX_NAME+MAX_SESSIONId)*1000+(MAX_SESSIONId*100)+5000;
+    char message[size]="User currently online: \n";
+    for(int i=0;i<1000;i++){
+        if(usrDB[i]!=NULL){
+            char name[MAX_NAME];
+            char sessionName[MAX_SESSIONId];
+            strcpy(name,usrDB[i]->usrName);
+            strcpy(sessionName,usrDB[i]->sessionId);
+            strcat(message,name);
+            strcat(message," ");
+            strcat(message,sessionName);
+            strcat(message,"\n");
         }
     }
-    //not find
-    message(reply, 27, LO_NAK, "Admin", "username/password not found");
+    strcat(message,"Sessions currently avaliable \n")
+    for (int i = 0; i < 100; i++)
+    {
+        if(strlen(sessionDB[i])!=0){
+            strcat(message, sessionDB[i]);
+            strcat(message, "\n");
+        }
+    }
+    message(reply, size , QUERY, "Admin", message);
     return;
+}
+
+void login(struct message* b, struct message* reply){
+    char name[MAX_NAME];
+    char passwd[MAX_PSSWD];
+    strcpy(name,b->source);
+    strcpy(passwd,b->data);
+    if(/*not find password and name in usrdatabase*/){
+        message(reply, 27, LO_NAK, "Admin", "username/password not found");
+        return;
+    }else{
+        //createnewusr()
+        message(reply, 0, LO_ACK, "Admin", "");
+        return;
+    }
+    
+    //not find
 }
 // void exit(){
     
@@ -134,34 +149,25 @@ void processData(struct message* b, int recvFd){
     
     struct message reply;
     
-    enum WEIGHT weight = DEFAULT;
-    //Check if the username is in the userDB
-    if(findUserInUsrDB(b->source) != -1){
-        weight = REGESTER;
-        printf("inRegister\n");
-        int sessionTuble;
-        //CHECK if in the sessionDB (in session or in hall)
-        if((sessionTuble = findUserInSessionDB(b->source)) != -1){
-            weight = HALL;
-            printf("inHall\n");
-            //CHECK if in SessionDB and in Session
-            if(sessionDB[sessionTuble].sessionId != -1){
-                 printf("insession\n");
-                weight = SESSION;
-            }
-        }
+    enum WEIGHT weight=REGESTER;
+    
+    if(/*find in the HALL*/){
+        weight = HALL;
+        printf("inHall\n");
+        //CHECK if in SessionDB and in Session
+    }
+    else if(/*find in any Session*/){
+        weight = SESSION;
+        printf("insession\n");
     }
     switch(weight){
-        case DEFAULT:
-            // NAK USER NOT EXIST
-            message(&reply, 14, LO_NAK, "Admin", "User Not Exist");
-        break;
         case REGESTER:
             // Login: check passwd
             if(b->type == LOGIN){
                 login(b,&reply);
             }else{
-                message(&reply, 14, LO_NAK, "Admin", "User Not Exist");
+                message(&reply, 16, CMD_NAK, "Admin", 
+                "Command Not Find, Command Avliable are:\n Login");
             }
             break;
         case HALL:
@@ -186,6 +192,10 @@ void processData(struct message* b, int recvFd){
                 printf("%i\n",atoi(b->data));
                 createnewSession(atoi(b->data));
                 message(&reply, 0, NS_ACK, "Admin", "");
+            }else{
+                message(&reply, 79, CMD_NAK, "Admin", 
+                "Command Not Find, Command Avliable are:\n joinSession,
+                createSession,logout,list,quit");
             }
         break;
         case SESSION:
@@ -195,6 +205,10 @@ void processData(struct message* b, int recvFd){
             // QUERY:
             if(b->type == QUERY){
                //query(&reply);
+            }else{
+                message(&reply, 79, CMD_NAK, "Admin", 
+                "Command Not Find, Command Avliable are:\n joinSession,
+                createSession,leaveSession,logout,list,quit");
             }
         break;
     }

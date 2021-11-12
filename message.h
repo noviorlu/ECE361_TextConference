@@ -14,7 +14,7 @@ enum TYPE{
     LEAVE_SESS,             // 07
     NEW_SESS, NS_ACK,       // 08,09
     MESSAGE,                // 10
-    QUERY, QU_ACK           // 11,12
+    QUERY, QU_ACK, CMD_NAK  // 11,12,13
 };
 
 struct message {

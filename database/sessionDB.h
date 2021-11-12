@@ -3,7 +3,6 @@
 #define MAX_NAME 20
 #define MAX_SESSIONId 20
 enum WEIGHT{
-    DEFAULT,
     REGESTER,
     HALL,
     SESSION

@@ -1,23 +1,48 @@
-#include "userDB.h"
+#include "loginUsrDB.h"
 
 // Initialize a Session Information tuble, include userName, sessionID, weight
-int createUserInfo(char name[], int sockFd){
-    int idx = 0;
-    while(userDB[idx] != NULL && idx < 1000){idx++};
-    if(idx >= 1000){
-        printf("SessionDB: User full filled\n");
-        return -1;
+int createLoginUsrInfo(char name[MAX_NAME], int sockFd){
+    // int idx = 0;
+    // while(loginUsrDB[idx] != NULL && idx < 1000){
+    //     // If usr already logined
+    //     // findUsrIfExist
+    //     if(strcmp(loginUsrDB[idx],name)==0){
+    //         return 0;
+    //     }
+    //     idx++;
+    // }
+    // if(idx >= 1000){
+    //     printf("SessionDB: User full filled\n");
+    //     return -1;
+    // }
+    
+    // loginUsrDB[idx] = (LoginUsrInfo *)malloc(sizeof(LoginUsrInfo));
+    // strcpy(loginUsrDB[idx]->usrName,name);
+    // memset(loginUsrDB[idx]->sessionId, 0, MAX_SESSIONId);
+    // loginUsrDB[idx]->sockFd = sockFd;
+    // loginUsrDB[idx]->weight = 0;
+    // return 0;
+    if(hall.head=NULL){
+        head=(joined)malloc(sizeof(joinedNode));
+
     }
-    userDB[idx] = (UserInfo *)malloc(sizeof(UserInfo));
-    strcpy(userDB[idx]->usrName,name);
-    memset(userDB[idx]->sessionId, 0, MAX_SESSIONId);
-    userDB[idx]->sockFd = sockFd;
-    userDB[idx]->weight = 0;
-    return 0;
 }
-int deleteSession(char sessionName[20]){
+
+int findSessionIfExist(){
+
+}
+
+// Usr name, find sessionID
+// Sessionid find all usrName
+
+LoginUsrInfo** findUsrInSession(char sessionIdp[MAX_SESSIONId]){
+    // return a list of Usr that found the same SessionId
+
+}
+
+int deleteSession(char sessionId[MAX_SESSIONId]){
     for(int i=0; i<100; i++){
-        if(strcmp(sessionName, sessionDB[i])==0){
+        if(strcmp(sessionId, sessionDB[i])==0){
             //delete all usrs in the session
 
 
@@ -27,7 +52,7 @@ int deleteSession(char sessionName[20]){
         }
     }
 }
-int createnewSession(char sessionName[20]){
+int createNewSession(char sessionName[20]){
     int idx = 0;
     for(int i = 0; i < 100; i++){
         if(strlen(sessionDB[i]) == 0)
@@ -42,10 +67,10 @@ int createnewSession(char sessionName[20]){
 }
 
 // return -1 if not found
-UserInfo* findUserInUserDB(char userName[MAX_NAME]){
+LoginUsrInfo* findUsrIfExist(char userName[MAX_NAME]){
     for(int i = 0; i < 1000; i++){
-        if(strcmp(userDB[i].usrName, userName)==0){
-            return userDB[i];
+        if(strcmp(loginUsrDB[i].usrName, userName)==0){
+            return loginUsrDB[i];
         }
     }
     printf("SessionDB: user No Found\n");
@@ -53,7 +78,7 @@ UserInfo* findUserInUserDB(char userName[MAX_NAME]){
 }
 
 int removeUser(char userName[MAX_NAME]){
-    UserInfo* deleteUsr = findUserInSessionDB(userName);
+    LoginUsrInfo* deleteUsr = findUserInSessionDB(userName);
     if(deleteUsr == NULL){
         printf("SessionDB: user already removed\n");
         return -1;

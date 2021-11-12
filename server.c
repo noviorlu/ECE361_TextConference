@@ -82,6 +82,9 @@ void joinSession(char*userName, int newSession){
     }
     return;
 }
+
+void 
+
 void query(struct message* reply){
     int size=(MAX_NAME+MAX_SESSIONId)*1000+(MAX_SESSIONId*100)+5000;
     char message[size]="User currently online: \n";
@@ -112,6 +115,7 @@ void query(struct message* reply){
 void login(struct message* b, struct message* reply){
     for(int i=0;i<3;i++){
         //in userDatabase
+        if(findUserInSessionDB())
         if(strcmp(usrDB[i].password,b->data)==0 && strcmp(usrDB[i].usrId,b->source)==0){
             //has correct password and username
             for(int i=0;i<curLginUsr && strcmp(sessionDB[i].usrName, b->source)==0; i++){
@@ -126,9 +130,7 @@ void login(struct message* b, struct message* reply){
                 return;
             }else{
                 printf("added user into hall,index is %d\n",curLginUsr);
-                createUserInfo(&sessionDB[curLginUsr], b->source,-1, HALL);
-                printf("%s\n",sessionDB[0].usrName);
-                printf("%d\n",sessionDB[0].sessionId);
+                createUserInfo(b->source,);
                 //ACK
                 message(reply, 0, LO_ACK, "Admin", "");
                 return;

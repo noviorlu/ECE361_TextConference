@@ -30,12 +30,12 @@ int main(int argc, char *argv[]){
     fd_set read_fds;
     FD_ZERO(&master);
     FD_ZERO(&read_fds);
-    
+
     // add the listener to the master set
     FD_SET(listener, &master);
 
     // keep track of the biggest file descriptor
-    fdmax = listener; // so far, it's this one 
+    fdmax = listener; // so far, it's this one
 
     // main loop
     for(;;) {
@@ -47,6 +47,7 @@ int main(int argc, char *argv[]){
         monitor(fdmax, &read_fds);
     }
 }
+
 // return connected FD
 int newConnection(){
     struct sockaddr_storage remoteaddr;
@@ -62,17 +63,17 @@ int newConnection(){
         if (newfd > fdmax) { // keep track of the max
             fdmax = newfd;
         }
-        printf("selectserver: new connection from %s on socket %d\n", 
-            inet_ntop(remoteaddr.ss_family, 
-                get_in_addr((struct sockaddr*)&remoteaddr),
-                remoteIP, INET6_ADDRSTRLEN
-            ),
-            newfd
+        printf("selectserver: new connection from %s on socket %d\n",
+               inet_ntop(remoteaddr.ss_family,
+                         get_in_addr((struct sockaddr*)&remoteaddr),
+                         remoteIP, INET6_ADDRSTRLEN
+               ),
+               newfd
         );
     }
     return newfd;
 }
-
+/*
 void joinSession(char*userName, int newSession){
     for(int i=0;i<=curLginUsr;i++){
         if(strcmp(sessionDB[i].usrName, userName)==0){
@@ -82,8 +83,6 @@ void joinSession(char*userName, int newSession){
     }
     return;
 }
-
-void 
 
 void query(struct message* reply){
     int size=(MAX_NAME+MAX_SESSIONId)*1000+(MAX_SESSIONId*100)+5000;
@@ -117,7 +116,7 @@ void login(struct message* b, struct message* reply){
     char passwd[MAX_PSSWD];
     strcpy(name,b->source);
     strcpy(passwd,b->data);
-    if(/*not find password and name in usrdatabase*/){
+    if(not find password and name in usrdatabase){
         message(reply, 27, LO_NAK, "Admin", "username/password not found");
         return;
     }else{
@@ -125,13 +124,10 @@ void login(struct message* b, struct message* reply){
         message(reply, 0, LO_ACK, "Admin", "");
         return;
     }
-    
+
     //not find
 }
-// void exit(){
-    
-// }
-//client -> weight
+*/
 void processData(struct message* b, int recvFd){
     //EXIT Case
     printf("processing data\n");
@@ -139,78 +135,63 @@ void processData(struct message* b, int recvFd){
         close(recvFd);
         FD_CLR(recvFd, &master);
         //clear user in SessionDB if exist
-        removeUser(b->source);
+        //removeUser(b->source);
         printf("removed\n");
         return;
     }
 
     printf("Recv message: ");
     printMessage(b);
-    
+
     struct message reply;
-    
-    enum WEIGHT weight=REGESTER;
-    
-    if(/*find in the HALL*/){
-        weight = HALL;
-        printf("inHall\n");
-        //CHECK if in SessionDB and in Session
-    }
-    else if(/*find in any Session*/){
-        weight = SESSION;
-        printf("insession\n");
-    }
+
+    enum WEIGHT weight = REGESTER;
+//    if(find in the HALL){
+//        weight = HALL;
+//        printf("inHall\n");
+//        //CHECK if in SessionDB and in Session
+//    }
+//    else if(find in any Session){
+//        weight = SESSION;
+//        printf("insession\n");
+//    }
     switch(weight){
         case REGESTER:
             // Login: check passwd
-            if(b->type == LOGIN){
-                login(b,&reply);
-            }else{
-                message(&reply, 16, CMD_NAK, "Admin", 
-                "Command Not Find, Command Avliable are:\n Login");
-            }
+//            if(b->type == LOGIN){
+//                login(b,&reply);
+//            }else{
+//                message(&reply, 16, CMD_NAK, "Admin",
+//                        "Command Not Find, Command Avliable are:\n Login");
+//            }
             break;
         case HALL:
             // JOIN SESSION:
-                // sessionOpen[sessionNum] ?= true;
-            if(b->type == JOIN){
-               if(sessionOpen[atoi(b->data)]==true){
-                   message(&reply, 0, JN_ACK, "Admin", "");
-                   joinSession(b->source, atoi(b->data));
-                   printf("%s join session %i",b->source,atoi(b->data));
-               }else{
-                   message(&reply, 23, JN_NAK, "Admin", "the session is not open");
-               }
-            }
             // QUERY:
-            if(b->type == QUERY){
-               //query(&reply);
-            }
             // NEW SESSION:
-                // sessionOpen[sessionNum] ?= true;
-            if(b->type == NEW_SESS){
-                printf("%i\n",atoi(b->data));
-                createnewSession(atoi(b->data));
-                message(&reply, 0, NS_ACK, "Admin", "");
-            }else{
-                message(&reply, 79, CMD_NAK, "Admin", 
-                "Command Not Find, Command Avliable are:\n joinSession,
-                createSession,logout,list,quit");
-            }
-        break;
+//            if(b->type == NEW_SESS){
+//                printf("%i\n",atoi(b->data));
+//                createnewSession(atoi(b->data));
+//                message(&reply, 0, NS_ACK, "Admin", "");
+//            }else{
+//                message(&reply, 79, CMD_NAK, "Admin",
+//                        "Command Not Find, Command Avliable are:\n joinSession,
+//                createSession,logout,list,quit");
+//            }
+            break;
         case SESSION:
             // EXIT:
             // QUIT:
             // MESSAGE:
             // QUERY:
-            if(b->type == QUERY){
-               //query(&reply);
-            }else{
-                message(&reply, 79, CMD_NAK, "Admin", 
-                "Command Not Find, Command Avliable are:\n joinSession,
-                createSession,leaveSession,logout,list,quit");
-            }
-        break;
+//            if(b->type == QUERY){
+//                //query(&reply);
+//            }else{
+//                message(&reply, 79, CMD_NAK, "Admin",
+//                        "Command Not Find, Command Avliable are:\n joinSession,
+//                createSession,leaveSession,logout,list,quit");
+//            }
+            break;
     }
 
     // printf("Received message: ");
@@ -223,6 +204,8 @@ void processData(struct message* b, int recvFd){
         printf("Send message to Socket: %d failed\n", recvFd);
     }
 }
+
+
 void monitor(int fdmax, fd_set *restrict read_fds){
     // run through the existing connections looking for data to read
     for(int i = 0; i <= fdmax; i++) {
@@ -262,7 +245,7 @@ void initServer(char* PORT){
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
-    
+
     int yes=1; // for setsockopt() SO_REUSEADDR, below
     int rv;
     if ((rv = getaddrinfo(NULL, PORT, &hints, &ai)) != 0) {

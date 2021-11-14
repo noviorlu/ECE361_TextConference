@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/server.dir/bin/server.c.o  -o server -lm 
+/usr/bin/cc    CMakeFiles/server.dir/bin/server.c.o CMakeFiles/server.dir/src/sessionDB.c.o CMakeFiles/server.dir/src/usrDB.c.o  -o server -lm 

@@ -4,3 +4,11 @@
 CMakeFiles/client.dir/bin/client.c.o: ../bin/client.c
 CMakeFiles/client.dir/bin/client.c.o: ../include/message.h
 
+CMakeFiles/client.dir/src/sessionDB.c.o: ../include/sessionDB.h
+CMakeFiles/client.dir/src/sessionDB.c.o: ../include/var.h
+CMakeFiles/client.dir/src/sessionDB.c.o: ../src/sessionDB.c
+
+CMakeFiles/client.dir/src/usrDB.c.o: ../include/usrDB.h
+CMakeFiles/client.dir/src/usrDB.c.o: ../include/var.h
+CMakeFiles/client.dir/src/usrDB.c.o: ../src/usrDB.c
+

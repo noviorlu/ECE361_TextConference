@@ -15,28 +15,28 @@ The C compiler identification is GNU, found in "/homes/c/cheny811/Desktop/ECE361
 Determining if the C compiler works passed with the following output:
 Change Dir: /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_35fe0/fast"
-/usr/bin/make -f CMakeFiles/cmTC_35fe0.dir/build.make CMakeFiles/cmTC_35fe0.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_3606c/fast"
+/usr/bin/make -f CMakeFiles/cmTC_3606c.dir/build.make CMakeFiles/cmTC_3606c.dir/build
 make[1]: Entering directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_35fe0.dir/testCCompiler.c.o
-/usr/bin/cc    -o CMakeFiles/cmTC_35fe0.dir/testCCompiler.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_35fe0
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_35fe0.dir/link.txt --verbose=1
-/usr/bin/cc      CMakeFiles/cmTC_35fe0.dir/testCCompiler.c.o  -o cmTC_35fe0 
+Building C object CMakeFiles/cmTC_3606c.dir/testCCompiler.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_3606c.dir/testCCompiler.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_3606c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3606c.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_3606c.dir/testCCompiler.c.o  -o cmTC_3606c 
 make[1]: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_c5424/fast"
-/usr/bin/make -f CMakeFiles/cmTC_c5424.dir/build.make CMakeFiles/cmTC_c5424.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_04a14/fast"
+/usr/bin/make -f CMakeFiles/cmTC_04a14.dir/build.make CMakeFiles/cmTC_04a14.dir/build
 make[1]: Entering directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o
-/usr/bin/cc    -o CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.13/Modules/CMakeCCompilerABI.c
-Linking C executable cmTC_c5424
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c5424.dir/link.txt --verbose=1
-/usr/bin/cc     -v CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o  -o cmTC_c5424 
+Building C object CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.13/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_04a14
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_04a14.dir/link.txt --verbose=1
+/usr/bin/cc     -v CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o  -o cmTC_04a14 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper
@@ -48,9 +48,9 @@ Thread model: posix
 gcc version 8.3.0 (Debian 8.3.0-6) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c5424' '-mtune=generic' '-march=x86-64'
- /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cchS9x3t.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -o cmTC_c5424 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c5424' '-mtune=generic' '-march=x86-64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_04a14' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cctobqCK.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -o cmTC_04a14 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_04a14' '-mtune=generic' '-march=x86-64'
 make[1]: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
 
 
@@ -58,14 +58,14 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_c5424/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_c5424.dir/build.make CMakeFiles/cmTC_c5424.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_04a14/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_04a14.dir/build.make CMakeFiles/cmTC_04a14.dir/build]
   ignore line: [make[1]: Entering directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.13/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTC_c5424]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c5424.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/cc     -v CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o  -o cmTC_c5424 ]
+  ignore line: [Building C object CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.13/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_04a14]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_04a14.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc     -v CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o  -o cmTC_04a14 ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper]
@@ -77,13 +77,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 8.3.0 (Debian 8.3.0-6) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/8/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/8/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c5424' '-mtune=generic' '-march=x86-64']
-  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cchS9x3t.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -o cmTC_c5424 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_04a14' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cctobqCK.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -o cmTC_04a14 /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/8/../../.. CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/8/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o]
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/8/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/cchS9x3t.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cctobqCK.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -98,7 +98,7 @@ Parsed C implicit link information from above output:
     arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
     arg [-pie] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_c5424] ==> ignore
+    arg [cmTC_04a14] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/Scrt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-linux-gnu/8/crtbeginS.o] ==> ignore
@@ -110,7 +110,7 @@ Parsed C implicit link information from above output:
     arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/x86_64-linux-gnu/8/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/8/../../..]
-    arg [CMakeFiles/cmTC_c5424.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_04a14.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--push-state] ==> ignore
     arg [--as-needed] ==> ignore
@@ -142,14 +142,14 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_818b1/fast"
-/usr/bin/make -f CMakeFiles/cmTC_818b1.dir/build.make CMakeFiles/cmTC_818b1.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_1e344/fast"
+/usr/bin/make -f CMakeFiles/cmTC_1e344.dir/build.make CMakeFiles/cmTC_1e344.dir/build
 make[1]: Entering directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_818b1.dir/feature_tests.c.o
-/usr/bin/cc   -std=c11 -o CMakeFiles/cmTC_818b1.dir/feature_tests.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/feature_tests.c
-Linking C executable cmTC_818b1
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_818b1.dir/link.txt --verbose=1
-/usr/bin/cc      CMakeFiles/cmTC_818b1.dir/feature_tests.c.o  -o cmTC_818b1 
+Building C object CMakeFiles/cmTC_1e344.dir/feature_tests.c.o
+/usr/bin/cc   -std=c11 -o CMakeFiles/cmTC_1e344.dir/feature_tests.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/feature_tests.c
+Linking C executable cmTC_1e344
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1e344.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_1e344.dir/feature_tests.c.o  -o cmTC_1e344 
 make[1]: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
 
 
@@ -162,14 +162,14 @@ make[1]: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConfer
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_662a2/fast"
-/usr/bin/make -f CMakeFiles/cmTC_662a2.dir/build.make CMakeFiles/cmTC_662a2.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_7d1a0/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7d1a0.dir/build.make CMakeFiles/cmTC_7d1a0.dir/build
 make[1]: Entering directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_662a2.dir/feature_tests.c.o
-/usr/bin/cc   -std=c99 -o CMakeFiles/cmTC_662a2.dir/feature_tests.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/feature_tests.c
-Linking C executable cmTC_662a2
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_662a2.dir/link.txt --verbose=1
-/usr/bin/cc      CMakeFiles/cmTC_662a2.dir/feature_tests.c.o  -o cmTC_662a2 
+Building C object CMakeFiles/cmTC_7d1a0.dir/feature_tests.c.o
+/usr/bin/cc   -std=c99 -o CMakeFiles/cmTC_7d1a0.dir/feature_tests.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/feature_tests.c
+Linking C executable cmTC_7d1a0
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7d1a0.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_7d1a0.dir/feature_tests.c.o  -o cmTC_7d1a0 
 make[1]: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
 
 
@@ -182,14 +182,14 @@ make[1]: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConfer
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_b9517/fast"
-/usr/bin/make -f CMakeFiles/cmTC_b9517.dir/build.make CMakeFiles/cmTC_b9517.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_10250/fast"
+/usr/bin/make -f CMakeFiles/cmTC_10250.dir/build.make CMakeFiles/cmTC_10250.dir/build
 make[1]: Entering directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_b9517.dir/feature_tests.c.o
-/usr/bin/cc   -std=c90 -o CMakeFiles/cmTC_b9517.dir/feature_tests.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/feature_tests.c
-Linking C executable cmTC_b9517
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9517.dir/link.txt --verbose=1
-/usr/bin/cc      CMakeFiles/cmTC_b9517.dir/feature_tests.c.o  -o cmTC_b9517 
+Building C object CMakeFiles/cmTC_10250.dir/feature_tests.c.o
+/usr/bin/cc   -std=c90 -o CMakeFiles/cmTC_10250.dir/feature_tests.c.o   -c /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/feature_tests.c
+Linking C executable cmTC_10250
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_10250.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_10250.dir/feature_tests.c.o  -o cmTC_10250 
 make[1]: Leaving directory '/nfs/ug/homes-2/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/CMakeTmp'
 
 

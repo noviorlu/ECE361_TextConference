@@ -5,6 +5,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/homes/c/cheny811/Desktop/ECE361_TextConference/bin/client.c" "/homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/client.dir/bin/client.c.o"
+  "/homes/c/cheny811/Desktop/ECE361_TextConference/src/sessionDB.c" "/homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/client.dir/src/sessionDB.c.o"
+  "/homes/c/cheny811/Desktop/ECE361_TextConference/src/usrDB.c" "/homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-debug/CMakeFiles/client.dir/src/usrDB.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

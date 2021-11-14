@@ -11,10 +11,11 @@ INCLUDE_DIRECTORIES(include)
 #4.source directory
 AUX_SOURCE_DIRECTORY(src DIR_SRCS)
 
+SET(FUNC ${DIR_SRCS})
 SET(EXCUTABLE bin)
 
-add_executable(server ${EXCUTABLE}/server.c)
+add_executable(server ${EXCUTABLE}/server.c ${FUNC})
 target_link_libraries(server m)
 
-add_executable(client ${EXCUTABLE}/client.c)
+add_executable(client ${EXCUTABLE}/client.c ${FUNC})
 target_link_libraries(client m)

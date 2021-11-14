@@ -58,8 +58,8 @@ CMAKE_BINARY_DIR = /homes/c/cheny811/Desktop/ECE361_TextConference/cmake-build-d
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -190,6 +190,66 @@ bin/server.c.s:
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/bin/server.c.s
 .PHONY : bin/server.c.s
 
+src/sessionDB.o: src/sessionDB.c.o
+
+.PHONY : src/sessionDB.o
+
+# target to build an object file
+src/sessionDB.c.o:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/sessionDB.c.o
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/sessionDB.c.o
+.PHONY : src/sessionDB.c.o
+
+src/sessionDB.i: src/sessionDB.c.i
+
+.PHONY : src/sessionDB.i
+
+# target to preprocess a source file
+src/sessionDB.c.i:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/sessionDB.c.i
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/sessionDB.c.i
+.PHONY : src/sessionDB.c.i
+
+src/sessionDB.s: src/sessionDB.c.s
+
+.PHONY : src/sessionDB.s
+
+# target to generate assembly for a file
+src/sessionDB.c.s:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/sessionDB.c.s
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/sessionDB.c.s
+.PHONY : src/sessionDB.c.s
+
+src/usrDB.o: src/usrDB.c.o
+
+.PHONY : src/usrDB.o
+
+# target to build an object file
+src/usrDB.c.o:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/usrDB.c.o
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/usrDB.c.o
+.PHONY : src/usrDB.c.o
+
+src/usrDB.i: src/usrDB.c.i
+
+.PHONY : src/usrDB.i
+
+# target to preprocess a source file
+src/usrDB.c.i:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/usrDB.c.i
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/usrDB.c.i
+.PHONY : src/usrDB.c.i
+
+src/usrDB.s: src/usrDB.c.s
+
+.PHONY : src/usrDB.s
+
+# target to generate assembly for a file
+src/usrDB.c.s:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/usrDB.c.s
+	$(MAKE) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/usrDB.c.s
+.PHONY : src/usrDB.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -206,6 +266,12 @@ help:
 	@echo "... bin/server.o"
 	@echo "... bin/server.i"
 	@echo "... bin/server.s"
+	@echo "... src/sessionDB.o"
+	@echo "... src/sessionDB.i"
+	@echo "... src/sessionDB.s"
+	@echo "... src/usrDB.o"
+	@echo "... src/usrDB.i"
+	@echo "... src/usrDB.s"
 .PHONY : help
 
 

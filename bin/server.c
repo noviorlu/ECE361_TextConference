@@ -136,6 +136,7 @@ void processData(struct message* b, int recvFd){
         FD_CLR(recvFd, &master);
         //clear user in SessionDB if exist
         //removeUser(b->source);
+        findUsrInfoByUser("S");
         printf("removed\n");
         return;
     }

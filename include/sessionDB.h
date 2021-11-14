@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "var.h"
+#include "../include/var.h"
 
 // General User Info
 typedef struct loginUsrInfo{

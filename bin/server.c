@@ -137,6 +137,7 @@ void processData(struct message* b, int recvFd){
         }
     }
     if(usr!=NULL){
+        printf("PROCESSING TYPE: %d\n", b->type);
         if(usr->sessionJoined==0){
             printf("inHall\n");
             if(b->type == QUERY){

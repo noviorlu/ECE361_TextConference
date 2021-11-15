@@ -81,6 +81,10 @@ void join(struct message* b, char* buf){
 
 void leave(struct message* b, char* buf){
     buf = strtok (NULL, " \n");
+    if(strlen(buf) == 0){
+        message(b,0,LEAVE_SESS,usrName,"");
+        return;
+    }
     char result[MAX_SESSIONId];
     strcpy(result,buf);
     message(b,strlen(result),LEAVE_SESS,usrName,result);

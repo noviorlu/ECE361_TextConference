@@ -1,4 +1,0 @@
-/u/a/cheny811/Desktop/ECE361_TextConference/build/CMakeFiles/edit_cache.dir
-/u/a/cheny811/Desktop/ECE361_TextConference/build/CMakeFiles/rebuild_cache.dir
-/u/a/cheny811/Desktop/ECE361_TextConference/build/CMakeFiles/server.dir
-/u/a/cheny811/Desktop/ECE361_TextConference/build/CMakeFiles/client.dir

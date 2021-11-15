@@ -60,14 +60,14 @@ int createSession(char sessionId[MAX_SESSIONId]){
     return idx;
 }
 
-// returns NULL if Session not exist
-SessionInfo* findSession(char sessionId[MAX_SESSIONId]){
+// returns -1 if Session not exist
+int findSession(char sessionId[MAX_SESSIONId]){
     for(int i = 0; i < MAX_SESSION; i++){
         if(sessionDB[i] == NULL) continue;
         if(strcmp(sessionDB[i]->sessionId, sessionId) == 0)
-            return sessionDB[i];
+            return i;
     }
-    return NULL;
+    return -1;
 }
 
 // move all usr in Session into 'HALL', delete Session
@@ -94,13 +94,13 @@ int joinSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
         return -1;
     }
 
-    SessionInfo* sessInfo = findSession(sessionId);
-    if(sessInfo == NULL){
+    int sess = findSession(sessionId);
+    if(sess == -1){
         printf("joinSession ERROR: SESSION NO FOUND\n");
         return -2;
     }
 
-    addToSession(usrInfo, sessInfo);
+    addToSession(usrInfo, sessionDB[sess]);
     usrInfo->sessionJoined++;
     return 0;
 }
@@ -156,9 +156,9 @@ int leaveFromSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
         printf("LEAVE Session ERROR: cannot leave from Hall\n");
         return -1;
     }
-    SessionInfo* sessInfo = findSession(sessionId);
-    if(sessInfo == NULL) return -2;
-    LoginUsrInfo* usrInfo = leaveFromSession(usrName, &sessInfo);
+    int sessIdx = findSession(sessionId);
+    if(sessIdx == -1) return -2;
+    LoginUsrInfo* usrInfo = leaveFromSession(usrName, &sessionDB[sessIdx]);
     if(usrInfo == NULL) return -3;
     
     usrInfo->sessionJoined--;

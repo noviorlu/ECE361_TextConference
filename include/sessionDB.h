@@ -48,7 +48,7 @@ extern void deleteUsr(char usrName[MAX_NAME]);
 extern int leaveFromSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]);
 
 int createSession(char sessionId[MAX_SESSIONId]);
-SessionInfo* findSession(char sessionId[MAX_SESSIONId]);
+int findSession(char sessionId[MAX_SESSIONId]);
 void addToSession(LoginUsrInfo* usrInfo, SessionInfo* sessInfo);
 LoginUsrInfo* leaveAllSession(char usrName[MAX_NAME]);
 LoginUsrInfo* leaveFromSession(char usrName[MAX_NAME], SessionInfo** sessInfo);

@@ -38,12 +38,9 @@ void *get_in_addr(struct sockaddr *sa);
 //    initalizeSessionDB();
 //    createUsr("Jack", 1);
 //    createSession_H("Jack", "a");
-//    createSession_H("Jack", "b");
-//    createSession_H("Jack", "c");
 //    printAllSession();
-//    leaveFromSession_H("Jack", "a");
-//    printAllSession();
-//    leaveAllSession_H("Jack");
+//    int a = leaveFromSession_H("Jack", "a");
+//    printf("ErrorBIT %d\n", a);
 //    printAllSession();
 //}
 

@@ -11,4 +11,5 @@ typedef struct usrInfo{
 
 UsrInfo* usrDB[MAX_USR];
 
-extern int findUserInUsrDB(char* userName);
+extern void initUserDB();
+extern int findUserInUsrDB(char userName[MAX_NAME], char psswd[MAX_PSSWD]);

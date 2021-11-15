@@ -26,6 +26,7 @@ int cmdToEnum(char* data);
 
 void processData();
 void printData(struct message* b);
+void closeConnection();
 
 int main(){
     FD_ZERO(&master);
@@ -50,14 +51,11 @@ int main(){
                 else{
                     if(errorB == 0){
                         printf("Sender socket %d connection Closed\n", sender);
-                       close(sender); // bye!
-                        FD_CLR(sender, &master); // remove from master set
-                        fdmax = STDIN;
+                        closeConnection();
                     }else if(errorB == -1) perror("recv");
                     else if(errorB == -2){
-                        printf("Invalid Message, client was hacked");
-                        close(sender); // bye!
-                        FD_CLR(sender, &master); //remove from master set
+                        printf("Invalid Message, server was hacked");
+                        closeConnection();
                     }
                 }
             }
@@ -65,9 +63,7 @@ int main(){
     }
     return 0;
 }
-void new_sess(struct message* b, char* buf){//这里有问题
-    ///createsession\08
-    //printf("%s\n",buf);
+void new_sess(struct message* b, char* buf){
      int id=0;
      int i=0;
      while(buf[i]!='\0'){
@@ -105,7 +101,7 @@ void join(struct message* b, char* buf){//这里有问题
     return;
 }
 
-
+// returns -1 if cnnot connect to server
 int login(struct message* b, char* buf){
     char* cmd[4];
     for(int i=0; i<4; i++) {
@@ -139,12 +135,21 @@ void processData(){
 
     if(buf[0] == '/'){
         type = cmdToEnum(buf);
+
         if(type == -1){
             printf("Invalid cmd, please reType\n"); 
             return;
         }
+        if(fdmax == STDIN && type != LOGIN){
+           printf("LOGIN ERROR: client not logined\n");
+           return;
+        }
         switch (type){
             case LOGIN:
+                if(sender != -1){
+                    printf("ProcessData ERROR: client already Logined\n");
+                    return;
+                } 
                 if(login(&b, buf) == -1) return;
                 break;
             case EXIT:
@@ -176,12 +181,23 @@ void processData(){
     messageToString(str, &b);
     send(sender, str, strlen(str), 0);
 }
+
 void printData(struct message* b){
     //Print recved message from server side
     printf("Recv message: ");
     printMessage(b);
+    
+    if(b->type == LO_NAK){
+        closeConnection();
+    }
 }
 
+void closeConnection(){
+    close(sender); // bye!
+    FD_CLR(sender, &master); // remove from master set
+    fdmax = STDIN;
+    sender = -1;
+}
 
 int initClient(char* ipAddr, char* port){
     int destPort = atoi(port);

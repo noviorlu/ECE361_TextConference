@@ -9,7 +9,6 @@
 typedef struct loginUsrInfo{
     char usrName[MAX_NAME];
     int sockFd;
-    enum WEIGHT weight;
     int sessionJoined;
 }LoginUsrInfo;
 
@@ -38,17 +37,20 @@ extern int createSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]
 
 extern int joinSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]);
 
-extern void createUsr(char usrName[MAX_NAME], int sockFd, enum WEIGHT weight);
+extern void createUsr(char usrName[MAX_NAME], int sockFd);
 
+extern LoginUsrInfo* findUsrInfoByFd(int sockFd);
 extern LoginUsrInfo* findUsrInfoByUser(char usrName[MAX_NAME]);
 extern SessionInfo* findFirstSessionByUser(char usrName[MAX_NAME]);
 
-extern void leaveAllSession(char usrName[MAX_NAME]);
+extern void leaveAllSession_H(char usrName[MAX_NAME]);
+extern void deleteUsr(char usrName[MAX_NAME]);
 extern int leaveFromSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]);
 
 int createSession(char sessionId[MAX_SESSIONId]);
 SessionInfo* findSession(char sessionId[MAX_SESSIONId]);
 void addToSession(LoginUsrInfo* usrInfo, SessionInfo* sessInfo);
+LoginUsrInfo* leaveAllSession(char usrName[MAX_NAME]);
 LoginUsrInfo* leaveFromSession(char usrName[MAX_NAME], SessionInfo** sessInfo);
 
 extern void printAllUsrInSession(SessionInfo* sessInfo);

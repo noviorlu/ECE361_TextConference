@@ -17,15 +17,30 @@ fd_set master;
 int fdmax;
 #pragma endregion
 
+void login(struct message* b, struct message* reply, int recvFd);
+void logout(struct message* b, int recvFd);
+void processData(struct message* b, int recvFd);
+
 void initServer(char* PORT);
+
+void closeConnection(int sockFd);
 int newConnection();
 void monitor(int fdmax, fd_set *restrict read_fds);
 void *get_in_addr(struct sockaddr *sa);
+
+// int main(){
+//     initUserDB();
+//     printf("%d\n", findUserInUsrDB("jack","0"));
+//     return 0;
+// }
 
 int main(int argc, char *argv[]){
     //get port via argv
     listener = atoi(argv[1]);
     initServer(argv[1]);
+    
+    initalizeSessionDB();
+    initUserDB();
 
     fd_set read_fds;
     FD_ZERO(&master);
@@ -110,93 +125,76 @@ void query(struct message* reply){
     message(reply, size , QUERY, "Admin", message);
     return;
 }
-
-void login(struct message* b, struct message* reply){
-    char name[MAX_NAME];
-    char passwd[MAX_PSSWD];
-    strcpy(name,b->source);
-    strcpy(passwd,b->data);
-    if(not find password and name in usrdatabase){
-        message(reply, 27, LO_NAK, "Admin", "username/password not found");
-        return;
-    }else{
-        //createnewusr()
-        message(reply, 0, LO_ACK, "Admin", "");
-        return;
-    }
-
-    //not find
-}
 */
+
 void processData(struct message* b, int recvFd){
     //EXIT Case
-    printf("processing data\n");
     if(b->type == EXIT){
-        close(recvFd);
-        FD_CLR(recvFd, &master);
-        //clear user in SessionDB if exist
-        //removeUser(b->source);
-        findUsrInfoByUser("S");
-        printf("removed\n");
+        logout(b, recvFd);
         return;
     }
-
-    printf("Recv message: ");
-    printMessage(b);
 
     struct message reply;
 
-    enum WEIGHT weight = REGESTER;
-//    if(find in the HALL){
-//        weight = HALL;
-//        printf("inHall\n");
-//        //CHECK if in SessionDB and in Session
-//    }
-//    else if(find in any Session){
-//        weight = SESSION;
-//        printf("insession\n");
-//    }
-    switch(weight){
-        case REGESTER:
-            // Login: check passwd
-//            if(b->type == LOGIN){
-//                login(b,&reply);
-//            }else{
-//                message(&reply, 16, CMD_NAK, "Admin",
-//                        "Command Not Find, Command Avliable are:\n Login");
-//            }
-            break;
-        case HALL:
-            // JOIN SESSION:
-            // QUERY:
-            // NEW SESSION:
-//            if(b->type == NEW_SESS){
-//                printf("%i\n",atoi(b->data));
-//                createnewSession(atoi(b->data));
-//                message(&reply, 0, NS_ACK, "Admin", "");
-//            }else{
-//                message(&reply, 79, CMD_NAK, "Admin",
-//                        "Command Not Find, Command Avliable are:\n joinSession,
-//                createSession,logout,list,quit");
-//            }
-            break;
-        case SESSION:
-            // EXIT:
-            // QUIT:
-            // MESSAGE:
-            // QUERY:
-//            if(b->type == QUERY){
-//                //query(&reply);
-//            }else{
-//                message(&reply, 79, CMD_NAK, "Admin",
-//                        "Command Not Find, Command Avliable are:\n joinSession,
-//                createSession,leaveSession,logout,list,quit");
-//            }
-            break;
+    LoginUsrInfo* usr = findUsrInfoByUser(b->source);
+
+    if(b->type == LOGIN){
+        if(usr != NULL){
+            message(&reply, 18, LO_NAK, "Admin", "usr already Login\n"); 
+        }
+        else login(b,&reply, recvFd);
     }
 
-    // printf("Received message: ");
-    // printMessage(b);
+    // enum WEIGHT weight = REGESTER;
+    // // if(findUsrInfoByUser(b->source)!=NULL){
+    // //     if(findUsrInfoByUser(b->source)->sessionJoined==0){
+    // //     weight = HALL;
+    // //     printf("inHall\n");
+    // //     }
+    // //     else if(findUsrInfoByUser(b->source)->sessionJoined>0){
+    // //         weight = SESSION;
+    // //         printf("insession\n");
+    // //     }
+    // // }
+    
+//     switch(weight){
+//         case REGESTER:
+//             //Login: check passwd
+//             if(b->type == LOGIN){
+//                 login(b,&reply, recvFd);
+//             }else{
+//                 message(&reply, 16, CMD_NAK, "Admin",
+//                         "Command Not Find, Command Avliable are:\n Login");
+//             }
+//             break;
+//         case HALL:
+//             // JOIN SESSION:
+//             // QUERY:
+//             // NEW SESSION:
+// //            if(b->type == NEW_SESS){
+// //                printf("%i\n",atoi(b->data));
+// //                createnewSession(atoi(b->data));
+// //                message(&reply, 0, NS_ACK, "Admin", "");
+// //            }else{
+// //                message(&reply, 79, CMD_NAK, "Admin",
+// //                        "Command Not Find, Command Avliable are:\n joinSession,
+// //                createSession,logout,list,quit");
+// //            }
+//             break;
+//         case SESSION:
+//             // EXIT:
+//             // QUIT:
+//             // MESSAGE:
+//             // QUERY:
+// //            if(b->type == QUERY){
+// //                //query(&reply);
+// //            }else{
+// //                message(&reply, 79, CMD_NAK, "Admin",
+// //                        "Command Not Find, Command Avliable are:\n joinSession,
+// //                createSession,leaveSession,logout,list,quit");
+// //            }
+//             break;
+//     }
 
     char array[MAX_TOTAL];
     messageToString(array,&reply);
@@ -204,6 +202,31 @@ void processData(struct message* b, int recvFd){
     if(send(recvFd,array,strlen(array),0) == -1){
         printf("Send message to Socket: %d failed\n", recvFd);
     }
+}
+
+void login(struct message* b, struct message* reply, int recvFd){
+    printf("in login\n");
+    if(findUserInUsrDB(b->source,b->data) == -1){
+        message(reply, 49, LO_NAK, "Admin", "username or password not found, ConnectionClosed\n"); 
+        return;
+    }
+    else{
+        createUsr(b->source,recvFd);
+        printAllSession();
+        message(reply, 0, LO_ACK, "Admin", "");
+        return;
+    }
+}
+
+void logout(struct message* b, int recvFd){
+    close(recvFd);
+    FD_CLR(recvFd, &master);
+    //clear user in SessionDB if exist
+    printf("%s\n", b->source);
+    deleteUsr(b->source);
+    printAllSession();
+    printf("removed\n");
+    return;
 }
 
 
@@ -221,21 +244,29 @@ void monitor(int fdmax, fd_set *restrict read_fds){
                 int errorB = recvMessage(i, &b);
                 if(errorB == 0){
                     printf("Client socket %d connection Closed\n", i);
-                    close(i); // bye!
-                    FD_CLR(i, &master); // remove from master set
+                    closeConnection(i);
                 }
                 else if(errorB == -1) perror("recv");
                 else if(errorB == -2){
                     printf("Invalid Message, client was hacked");
-                    close(i); // bye!
-                    FD_CLR(i, &master); // remove from master set
+                    closeConnection(i);
                 }else{
+                    printf("Recv message: ");
+                    printMessage(&b);
                     processData(&b,i);
                 }
             }
         }
     }
 }
+
+void closeConnection(int sockFd){
+    close(sockFd); // bye!
+    FD_CLR(sockFd, &master); // remove from master set
+    deleteUsr(findUsrInfoByFd(sockFd)->usrName);
+    printAllSession();
+}
+
 void initServer(char* PORT){
     // 1.Socket() 
     // 2.bind()     https://www.cnblogs.com/fnlingnzb-learner/p/7542770.html

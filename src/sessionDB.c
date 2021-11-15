@@ -10,6 +10,8 @@ void initalizeSessionDB(){
     sessionDB[0] = (SessionInfo*)malloc(sizeof(SessionInfo));
     strcpy(sessionDB[0]->sessionId, "HALL");
     sessionDB[0]->head = NULL;
+
+    createUsr("Admin", -1);
 }
 
 // Create session with ID given (dont use findSess because need to mark idx)
@@ -121,18 +123,30 @@ void addToSession(LoginUsrInfo* usrInfo, SessionInfo* sessInfo){
     }
 }
 
+
 // remove user from all Sessions and join 'HALL'
 // return early if User already in NULL
-void leaveAllSession(char usrName[MAX_NAME]){
+LoginUsrInfo* leaveAllSession(char usrName[MAX_NAME]){
     LoginUsrInfo* usrInfo;
-    for(int i = 1; i < MAX_SESSION && sessionDB[i] != NULL; i++){
+    for(int i = 0; i < MAX_SESSION && sessionDB[i] != NULL; i++){
         LoginUsrInfo* temp = leaveFromSession(usrName, &sessionDB[i]);
         if(temp != NULL) usrInfo = temp;
     }
     if(usrInfo == NULL) {
         printf("LeaveAllSession: user already leaved all Session");
-        return;
+        return NULL;
     }
+    return usrInfo;
+}
+
+void deleteUsr(char usrName[MAX_NAME]){
+    if(strlen(usrName)==0) return;
+    LoginUsrInfo* usrInfo = leaveAllSession(usrName);
+    if(usrInfo != NULL) free(usrInfo);
+}
+
+void leaveAllSession_H(char usrName[MAX_NAME]){
+    LoginUsrInfo* usrInfo = leaveAllSession(usrName);
     addToSession(usrInfo, sessionDB[0]);
 }
 
@@ -188,14 +202,27 @@ ESCAPE:
 }
 
 // allocate New user and place into 'HALL'
-void createUsr(char usrName[MAX_NAME], int sockFd, enum WEIGHT weight){
+void createUsr(char usrName[MAX_NAME], int sockFd){
     LoginUsrInfo* temp = (LoginUsrInfo*)malloc(sizeof(LoginUsrInfo));
     strcpy(temp->usrName, usrName);
     temp->sockFd = sockFd;
     temp->sessionJoined = 0;
-    temp->weight = HALL;
 
     addToSession(temp, sessionDB[0]);
+}
+
+// returns NULL if User not exist
+LoginUsrInfo* findUsrInfoByFd(int sockFd){
+    for(int i = 0; i < MAX_SESSION; i++){
+        if(sessionDB[i] == NULL) continue;
+        JoinedNode* cur = sessionDB[i]->head;
+        while(cur != NULL){
+            if(cur->user != NULL && cur->user->sockFd == sockFd)
+                return cur->user;
+            cur = cur->next;
+        }
+    }
+    return NULL;
 }
 
 // returns NULL if User not exist

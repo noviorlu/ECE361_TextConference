@@ -155,48 +155,22 @@ void processData(struct message* b, int recvFd){
                 createSess(usr->usrName,b->data,&reply);
             }
         }else if(usr->sessionJoined>0){
-            
+            printf("inSession\n");
+            if(b->type == QUERY){
+                query(&reply);
+            }else if(b->type == JOIN){
+                join(usr->usrName,b->data,&reply);
+            }else if(b->type == NEW_SESS){
+                createSess(usr->usrName,b->data,&reply);
+            }else if(b->type == LEAVE_SESS){
+
+            }
         }
     }
 
 
 
-    // enum WEIGHT weight = REGESTER;
-    // // if(findUsrInfoByUser(b->source)!=NULL){
-    // //     if(findUsrInfoByUser(b->source)->sessionJoined==0){
-    // //     weight = HALL;
-    // //     printf("inHall\n");
-    // //     }
-    // //     else if(findUsrInfoByUser(b->source)->sessionJoined>0){
-    // //         weight = SESSION;
-    // //         printf("insession\n");
-    // //     }
-    // // }
-    
-//     switch(weight){
-//         case REGESTER:
-//             //Login: check passwd
-//             if(b->type == LOGIN){
-//                 login(b,&reply, recvFd);
-//             }else{
-//                 message(&reply, 16, CMD_NAK, "Admin",
-//                         "Command Not Find, Command Avliable are:\n Login");
-//             }
-//             break;
-//         case HALL:
-//             // JOIN SESSION:
-//             // QUERY:
-//             // NEW SESSION:
-// //            if(b->type == NEW_SESS){
-// //                printf("%i\n",atoi(b->data));
-// //                createnewSession(atoi(b->data));
-// //                message(&reply, 0, NS_ACK, "Admin", "");
-// //            }else{
-// //                message(&reply, 79, CMD_NAK, "Admin",
-// //                        "Command Not Find, Command Avliable are:\n joinSession,
-// //                createSession,logout,list,quit");
-// //            }
-//             break;
+
 //         case SESSION:
 //             // EXIT:
 //             // QUIT:
@@ -219,7 +193,20 @@ void processData(struct message* b, int recvFd){
         printf("Send message to Socket: %d failed\n", recvFd);
     }
 }
-
+void leaveSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply){
+    int result = leaveFromSession_H(usrName, sessionId);
+    printAllSession();
+    if(result==-1){
+        message(reply, 41, LS_NAK, "Admin", "joinsession ERROR: NOT ALLOWED TO LEAVE HALL");
+    }else if(result==-2){
+        message(reply, 42, LS_NAK, "Admin", "joinsession ERROR: SESSION NOT EXIST");
+    }else if(result==-3){
+        message(reply, 41, LS_NAK, "Admin", "joinsession ERROR: USER NOT EXIST IN SESSION");
+    }else{
+        message(reply, 0, LS_ACK, "Admin", "");
+    }
+    return;
+}
 void createSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply){
     int result = createSession_H(usrName,sessionId);
     printAllSession();
@@ -238,6 +225,7 @@ void createSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct mes
 
 void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply){
     int result = joinSession_H(usrName,sessionId);
+    printAllSession();
     if(result==-1){
         message(reply, 39, JN_NAK, "Admin", "joinSession ERROR: JOINED USER NO FOUND");
     }else if(result==-2){

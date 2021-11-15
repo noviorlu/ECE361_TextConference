@@ -10,8 +10,6 @@ void initalizeSessionDB(){
     sessionDB[0] = (SessionInfo*)malloc(sizeof(SessionInfo));
     strcpy(sessionDB[0]->sessionId, "HALL");
     sessionDB[0]->head = NULL;
-
-    createUsr("Admin", -1);
 }
 
 // Create session with ID given (dont use findSess because need to mark idx)
@@ -19,6 +17,7 @@ void initalizeSessionDB(){
 // return -2 if Session Already exist
 // return -3 if SessionDB fullfilled
 int createSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
+    
     LoginUsrInfo* usrInfo = findUsrInfoByUser(usrName);
     if(usrInfo == NULL) return -1;
     leaveFromSession(usrName, &sessionDB[0]);
@@ -55,6 +54,7 @@ int createSession(char sessionId[MAX_SESSIONId]){
         return -3;
     }
     sessionDB[idx] = (SessionInfo*)malloc(sizeof(SessionInfo));
+    sessionDB[idx] -> head=NULL;
     strcpy(sessionDB[idx]->sessionId, sessionId);
     return idx;
 }

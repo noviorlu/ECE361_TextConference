@@ -10,6 +10,7 @@
 #include "../include/sessionDB.h"
 #include "../include/message.h"
 #include "../include/usrDB.h"
+#include "../include/var.h"
 
 #pragma region CONSTVAR
 size_t listener;
@@ -17,8 +18,12 @@ fd_set master;
 int fdmax;
 #pragma endregion
 
-void login(struct message* b, struct message* reply, int recvFd);
+int login(struct message* b, struct message* reply, int recvFd);
 void logout(struct message* b, int recvFd);
+void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
+void createSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
+void query(struct message* reply);
+
 void processData(struct message* b, int recvFd);
 
 void initServer(char* PORT);
@@ -88,44 +93,37 @@ int newConnection(){
     }
     return newfd;
 }
-/*
-void joinSession(char*userName, int newSession){
-    for(int i=0;i<=curLginUsr;i++){
-        if(strcmp(sessionDB[i].usrName, userName)==0){
-            sessionDB[i].sessionId=newSession;
-            return;
+
+
+
+void query(struct message* reply){
+    // int size=(MAX_NAME+MAX_SESSIONId)*1000+(MAX_SESSIONId*100)+5000;
+    char result[MAX_QUERY]="User currently online: \n";
+
+    for(int i = 0; i < MAX_SESSION; i++){
+        if(sessionDB[i] == NULL)continue;
+
+        char sessionName[MAX_SESSIONId];
+        strcpy(sessionName,sessionDB[i]->sessionId);
+        strcat(result,sessionName);
+        strcat(result,":\n");
+
+        // printf("%s:\n",sessInfo->sessionId);
+        JoinedNode* cur = sessionDB[i]->head;
+        while(cur != NULL){
+            char name[MAX_NAME];
+            strcpy(name,cur->user->usrName);
+            //printf("\t%s\n", cur->user->usrName);
+            strcat(result,name);
+            strcat(result," ");
+            cur = cur->next;
         }
+        strcat(result,"\n");
     }
+    message(reply, strlen(result), QU_ACK, "Admin", result);
     return;
 }
 
-void query(struct message* reply){
-    int size=(MAX_NAME+MAX_SESSIONId)*1000+(MAX_SESSIONId*100)+5000;
-    char message[size]="User currently online: \n";
-    for(int i=0;i<1000;i++){
-        if(usrDB[i]!=NULL){
-            char name[MAX_NAME];
-            char sessionName[MAX_SESSIONId];
-            strcpy(name,usrDB[i]->usrName);
-            strcpy(sessionName,usrDB[i]->sessionId);
-            strcat(message,name);
-            strcat(message," ");
-            strcat(message,sessionName);
-            strcat(message,"\n");
-        }
-    }
-    strcat(message,"Sessions currently avaliable \n")
-    for (int i = 0; i < 100; i++)
-    {
-        if(strlen(sessionDB[i])!=0){
-            strcat(message, sessionDB[i]);
-            strcat(message, "\n");
-        }
-    }
-    message(reply, size , QUERY, "Admin", message);
-    return;
-}
-*/
 
 void processData(struct message* b, int recvFd){
     //EXIT Case
@@ -142,8 +140,26 @@ void processData(struct message* b, int recvFd){
         if(usr != NULL){
             message(&reply, 18, LO_NAK, "Admin", "usr already Login\n"); 
         }
-        else login(b,&reply, recvFd);
+        else {
+            login(b,&reply, recvFd);
+        }
     }
+    if(usr!=NULL){
+        if(usr->sessionJoined==0){
+            printf("inHall\n");
+            if(b->type == QUERY){
+                query(&reply);
+            }else if(b->type == JOIN){
+                join(usr->usrName,b->data,&reply);
+            }else if(b->type == NEW_SESS){
+                createSess(usr->usrName,b->data,&reply);
+            }
+        }else if(usr->sessionJoined>0){
+            
+        }
+    }
+
+
 
     // enum WEIGHT weight = REGESTER;
     // // if(findUsrInfoByUser(b->source)!=NULL){
@@ -204,17 +220,45 @@ void processData(struct message* b, int recvFd){
     }
 }
 
-void login(struct message* b, struct message* reply, int recvFd){
+void createSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply){
+    int result = createSession_H(usrName,sessionId);
+    printAllSession();
+    if(result==-1){
+        message(reply, 41, NS_NAK, "Admin", "createsession ERROR: JOINED USER NO FOUND");
+    }else if(result==-2){
+        message(reply, 42, NS_NAK, "Admin", "createsession ERROR: SESSION ALREADY EXIST");
+    }else if(result==-3){
+        message(reply, 41, NS_NAK, "Admin", "createsession ERROR: SESSIONDB FULLFILLED");
+    }else{
+        message(reply, 0, NS_ACK, "Admin", "");
+    }
+    return;
+}
+
+
+void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply){
+    int result = joinSession_H(usrName,sessionId);
+    if(result==-1){
+        message(reply, 39, JN_NAK, "Admin", "joinSession ERROR: JOINED USER NO FOUND");
+    }else if(result==-2){
+        message(reply, 35, JN_NAK, "Admin", "joinSession ERROR: SESSION NO FOUND");
+    }else{
+        message(reply, 0, JN_ACK, "Admin", "");
+    }
+    return;
+}   
+
+int login(struct message* b, struct message* reply, int recvFd){
     printf("in login\n");
     if(findUserInUsrDB(b->source,b->data) == -1){
         message(reply, 49, LO_NAK, "Admin", "username or password not found, ConnectionClosed\n"); 
-        return;
+        return -1;
     }
     else{
         createUsr(b->source,recvFd);
         printAllSession();
         message(reply, 0, LO_ACK, "Admin", "");
-        return;
+        return 0;
     }
 }
 
@@ -263,7 +307,10 @@ void monitor(int fdmax, fd_set *restrict read_fds){
 void closeConnection(int sockFd){
     close(sockFd); // bye!
     FD_CLR(sockFd, &master); // remove from master set
-    deleteUsr(findUsrInfoByFd(sockFd)->usrName);
+    LoginUsrInfo* user=findUsrInfoByFd(sockFd);
+    if(user!=NULL){
+        deleteUsr(user->usrName);
+    }
     printAllSession();
 }
 

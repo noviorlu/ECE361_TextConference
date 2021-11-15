@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/homes/l/liji13/Desktop/ECE361_TextConference/bin/client.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+stdbool.h
+-
+time.h
+-
+unistd.h
+-
+libgen.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+netdb.h
+-
+arpa/inet.h
+-
+../include/message.h
+/homes/l/liji13/Desktop/ECE361_TextConference/include/message.h
+../include/var.h
+/homes/l/liji13/Desktop/ECE361_TextConference/include/var.h
+
+/homes/l/liji13/Desktop/ECE361_TextConference/include/message.h
+sys/socket.h
+-
+
+/homes/l/liji13/Desktop/ECE361_TextConference/include/var.h
+

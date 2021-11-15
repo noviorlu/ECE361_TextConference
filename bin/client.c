@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 
 #include "../include/message.h"
+#include "../include/var.h"
 
 #pragma region CONSTVAR
 #define STDIN 0
@@ -64,41 +65,18 @@ int main(){
     return 0;
 }
 void new_sess(struct message* b, char* buf){
-     int id=0;
-     int i=0;
-     while(buf[i]!='\0'){
-         i++;
-     }
-     int size=0;
-     i++;
-     while(buf[i]!='\n'){
-         id=(id*10)+buf[i];
-         i++;
-     }
-    char idstr[3];
-    sprintf(idstr, "%d", id-'0'); 
-    message(b,strlen(idstr),NEW_SESS,usrName,idstr);
+    buf = strtok (NULL, " \n");
+    char result[MAX_SESSIONId];
+    strcpy(result,buf);
+    message(b,strlen(result),NEW_SESS,usrName,result);
     return;
 }
 
-void join(struct message* b, char* buf){//这里有问题
-    ///createsession\08
-    //printf("%s\n",buf);
-     int id=0;
-     int i=0;
-     while(buf[i]!='\0'){
-         i++;
-     }
-     int size=0;
-     i++;
-     while(buf[i]!='\n'){
-         id=(id*10)+buf[i];
-         i++;
-     }
-    char idstr[3];
-    sprintf(idstr, "%d", id-'0'); 
-    message(b,strlen(idstr),JOIN,usrName,idstr);
-    return;
+void join(struct message* b, char* buf){
+    buf = strtok (NULL, " \n");
+    char result[MAX_SESSIONId];
+    strcpy(result,buf);
+    message(b,strlen(result),JOIN,usrName,result);
 }
 
 // returns -1 if cnnot connect to server
@@ -110,6 +88,7 @@ int login(struct message* b, char* buf){
     }
     if((initClient(cmd[2], cmd[3])) == -1){
         printf("Cannot connect to server, Please Retry\n");
+        sender = -1;
         return -1;
     }else {
         printf("Connection Successful\n");

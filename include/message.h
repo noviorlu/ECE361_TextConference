@@ -12,9 +12,10 @@ enum TYPE{
     EXIT,                   // 03
     JOIN, JN_ACK, JN_NAK,   // 04~06
     LEAVE_SESS,             // 07
-    NEW_SESS, NS_ACK,       // 08,09
-    MESSAGE,                // 10
-    QUERY, QU_ACK, CMD_NAK  // 11,12,13
+    NEW_SESS, NS_ACK, NS_NAK,// 08,09,10
+    MESSAGE,                // 11
+    QUERY, QU_ACK,          // 12,13
+    CMD_NAK                 // 14
 };
 
 struct message {

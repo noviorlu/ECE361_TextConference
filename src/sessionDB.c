@@ -92,8 +92,6 @@ int joinSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
         printf("joinSession ERROR: JOINED USER NO FOUND\n");
         return -1;
     }
-    if(usrInfo->sessionJoined == 0)
-        leaveFromSession(usrName, &sessionDB[0]);
 
     SessionInfo* sessInfo = findSession(sessionId);
     if(sessInfo == NULL){

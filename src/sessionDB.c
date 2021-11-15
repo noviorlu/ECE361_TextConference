@@ -20,14 +20,15 @@ int createSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
     
     LoginUsrInfo* usrInfo = findUsrInfoByUser(usrName);
     if(usrInfo == NULL) return -1;
-    leaveFromSession(usrName, &sessionDB[0]);
+    
     int errorCode = createSession(sessionId);
 
     if(errorCode > 0){
         addToSession(usrInfo, sessionDB[errorCode]);
-    }else{
-        addToSession(usrInfo, sessionDB[0]);
+        leaveFromSession(usrName, &sessionDB[0]);
+        usrInfo->sessionJoined++;
     }
+
     return errorCode;
 }
 int createSession(char sessionId[MAX_SESSIONId]){
@@ -100,15 +101,12 @@ int joinSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
     }
 
     addToSession(usrInfo, sessInfo);
+    usrInfo->sessionJoined++;
     return 0;
 }
 
 // add User to session and control sessionJoined Number
 void addToSession(LoginUsrInfo* usrInfo, SessionInfo* sessInfo){
-    if(sessInfo != sessionDB[0])
-        usrInfo->sessionJoined++;
-    else usrInfo->sessionJoined = 0;
-
     JoinedNode* insertNode = (JoinedNode*) malloc(sizeof(JoinedNode));
     insertNode->user = usrInfo;
     insertNode->next = NULL;
@@ -145,6 +143,7 @@ void deleteUsr(char usrName[MAX_NAME]){
 
 void leaveAllSession_H(char usrName[MAX_NAME]){
     LoginUsrInfo* usrInfo = leaveAllSession(usrName);
+    usrInfo->sessionJoined = 0;
     addToSession(usrInfo, sessionDB[0]);
 }
 
@@ -161,6 +160,8 @@ int leaveFromSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
     if(sessInfo == NULL) return -2;
     LoginUsrInfo* usrInfo = leaveFromSession(usrName, &sessInfo);
     if(usrInfo == NULL) return -3;
+    
+    usrInfo->sessionJoined--;
     if(usrInfo->sessionJoined == 0)
         addToSession(usrInfo, sessionDB[0]);
     return 0;
@@ -186,8 +187,6 @@ LoginUsrInfo* leaveFromSession(char usrName[MAX_NAME], SessionInfo** sessInfo){
     prev->next = cur->next;
 
 ESCAPE:
-    cur->user->sessionJoined--;
-
     if((*sessInfo)->head == NULL && (*sessInfo) != sessionDB[0]){
         printf("SESSION \"%s\" Delete\n", (*sessInfo)->sessionId);
         free(*sessInfo);

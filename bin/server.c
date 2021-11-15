@@ -34,7 +34,20 @@ int newConnection();
 void monitor(int fdmax, fd_set *restrict read_fds);
 void *get_in_addr(struct sockaddr *sa);
 
-int main(int argc, char *argv[]){
+//int main(){
+//    initalizeSessionDB();
+//    createUsr("Jack", 1);
+//    createSession_H("Jack", "a");
+//    createSession_H("Jack", "b");
+//    createSession_H("Jack", "c");
+//    printAllSession();
+//    leaveFromSession_H("Jack", "a");
+//    printAllSession();
+//    leaveAllSession_H("Jack");
+//    printAllSession();
+//}
+
+int main1(int argc, char *argv[]){
     //get port via argv
     listener = atoi(argv[1]);
     initServer(argv[1]);

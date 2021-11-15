@@ -1,0 +1,12 @@
+called: /usr/bin/gcc
+	/u/a/cheny811/Desktop/ECE361_TextConference
+	/usr/bin/gcc
+	-I/u/a/cheny811/Desktop/ECE361_TextConference/include
+	-g3
+	-gdwarf-2
+	-std=gnu99
+	-o
+	CMakeFiles/server.dir/bin/server.c.o
+	-c
+	/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c
+

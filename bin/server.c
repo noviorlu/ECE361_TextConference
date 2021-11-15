@@ -22,6 +22,7 @@ int login(struct message* b, struct message* reply, int recvFd);
 void logout(struct message* b, int recvFd);
 void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
 void createSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
+void leaveSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
 void query(struct message* reply);
 
 void processData(struct message* b, int recvFd);
@@ -32,12 +33,6 @@ void closeConnection(int sockFd);
 int newConnection();
 void monitor(int fdmax, fd_set *restrict read_fds);
 void *get_in_addr(struct sockaddr *sa);
-
-// int main(){
-//     initUserDB();
-//     printf("%d\n", findUserInUsrDB("jack","0"));
-//     return 0;
-// }
 
 int main(int argc, char *argv[]){
     //get port via argv
@@ -94,8 +89,6 @@ int newConnection(){
     return newfd;
 }
 
-
-
 void query(struct message* reply){
     // int size=(MAX_NAME+MAX_SESSIONId)*1000+(MAX_SESSIONId*100)+5000;
     char result[MAX_QUERY]="User currently online: \n";
@@ -123,7 +116,6 @@ void query(struct message* reply){
     message(reply, strlen(result), QU_ACK, "Admin", result);
     return;
 }
-
 
 void processData(struct message* b, int recvFd){
     //EXIT Case
@@ -163,13 +155,10 @@ void processData(struct message* b, int recvFd){
             }else if(b->type == NEW_SESS){
                 createSess(usr->usrName,b->data,&reply);
             }else if(b->type == LEAVE_SESS){
-
+                leaveSess(usr->usrName,b->data,&reply);
             }
         }
     }
-
-
-
 
 //         case SESSION:
 //             // EXIT:
@@ -194,14 +183,19 @@ void processData(struct message* b, int recvFd){
     }
 }
 void leaveSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply){
+    if(strlen(sessionId) == 0){
+        leaveAllSession_H(usrName);
+        printAllSession();
+        return;
+    }
     int result = leaveFromSession_H(usrName, sessionId);
     printAllSession();
     if(result==-1){
-        message(reply, 41, LS_NAK, "Admin", "joinsession ERROR: NOT ALLOWED TO LEAVE HALL");
+        message(reply, 41, LS_NAK, "Admin", "leaveSess ERROR: NOT ALLOWED TO LEAVE HALL");
     }else if(result==-2){
-        message(reply, 42, LS_NAK, "Admin", "joinsession ERROR: SESSION NOT EXIST");
+        message(reply, 42, LS_NAK, "Admin", "leaveSess ERROR: SESSION NOT EXIST");
     }else if(result==-3){
-        message(reply, 41, LS_NAK, "Admin", "joinsession ERROR: USER NOT EXIST IN SESSION");
+        message(reply, 41, LS_NAK, "Admin", "leaveSess ERROR: USER NOT EXIST IN SESSION");
     }else{
         message(reply, 0, LS_ACK, "Admin", "");
     }

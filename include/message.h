@@ -11,7 +11,7 @@ enum TYPE{
     LOGIN, LO_ACK, LO_NAK,  // 00~02
     EXIT,                   // 03
     JOIN, JN_ACK, JN_NAK,   // 04~06
-    LEAVE_SESS,LS_ACK,LS_NAK // 07,08,09
+    LEAVE_SESS,LS_ACK, LS_NAK, // 07,08,09
     NEW_SESS, NS_ACK, NS_NAK,// 10,11,12
     MESSAGE,                // 13
     QUERY, QU_ACK,          // 14,15

@@ -79,6 +79,13 @@ void join(struct message* b, char* buf){
     message(b,strlen(result),JOIN,usrName,result);
 }
 
+void leave(struct message* b, char* buf){
+    buf = strtok (NULL, " \n");
+    char result[MAX_SESSIONId];
+    strcpy(result,buf);
+    message(b,strlen(result),LEAVE_SESS,usrName,result);
+}
+
 // returns -1 if cnnot connect to server
 int login(struct message* b, char* buf){
     char* cmd[4];
@@ -138,15 +145,13 @@ void processData(){
                 message(&b, 0, QUERY, usrName, "");
                 break;
             case NEW_SESS:
-                 //message(&b, 1, NEW_SESS, usrName, "1");
                  new_sess(&b,buf);
                 break;
             case JOIN:
-                 //message(&b, 1, JOIN, usrName, "1");
                  join(&b,buf);
                  break;
             case LEAVE_SESS:
-                 message(&b, 0, LEAVE_SESS, usrName, "");
+                 leave(&b,buf);
                  break;
         }
     }else{

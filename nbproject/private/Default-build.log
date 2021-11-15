@@ -1,0 +1,32 @@
+Scanning dependencies of target server
+[ 12%] Building C object CMakeFiles/server.dir/bin/server.c.o
+In file included from /u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c:11:
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/../include/message.h:15:5: error: expected ‘,’ or ‘}’ before ‘NEW_SESS’
+     NEW_SESS, NS_ACK, NS_NAK,// 10,11,12
+     ^~~~~~~~
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c: In function ‘query’:
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c:123:36: error: ‘QU_ACK’ undeclared (first use in this function); did you mean ‘LS_ACK’?
+     message(reply, strlen(result), QU_ACK, "Admin", result);
+                                    ^~~~~~
+                                    LS_ACK
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c:123:36: note: each undeclared identifier is reported only once for each function it appears in
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c: In function ‘processData’:
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c:150:27: error: ‘QUERY’ undeclared (first use in this function)
+             if(b->type == QUERY){
+                           ^~~~~
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c:154:33: error: ‘NEW_SESS’ undeclared (first use in this function); did you mean ‘LEAVE_SESS’?
+             }else if(b->type == NEW_SESS){
+                                 ^~~~~~~~
+                                 LEAVE_SESS
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c: In function ‘createSess’:
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c:214:28: error: ‘NS_NAK’ undeclared (first use in this function); did you mean ‘LS_NAK’?
+         message(reply, 41, NS_NAK, "Admin", "createsession ERROR: JOINED USER NO FOUND");
+                            ^~~~~~
+                            LS_NAK
+/u/a/cheny811/Desktop/ECE361_TextConference/bin/server.c:220:27: error: ‘NS_ACK’ undeclared (first use in this function); did you mean ‘LS_ACK’?
+         message(reply, 0, NS_ACK, "Admin", "");
+                           ^~~~~~
+                           LS_ACK
+gmake[2]: *** [CMakeFiles/server.dir/build.make:82: CMakeFiles/server.dir/bin/server.c.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:97: CMakeFiles/server.dir/all] Error 2
+gmake: *** [Makefile:103: all] Error 2

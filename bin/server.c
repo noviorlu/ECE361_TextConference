@@ -47,7 +47,7 @@ void *get_in_addr(struct sockaddr *sa);
 //    printAllSession();
 //}
 
-int main1(int argc, char *argv[]){
+int main(int argc, char *argv[]){
     //get port via argv
     listener = atoi(argv[1]);
     initServer(argv[1]);

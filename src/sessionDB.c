@@ -259,7 +259,7 @@ void printAllUsrInSession(SessionInfo* sessInfo){
     printf("%s:\n",sessInfo->sessionId);
     JoinedNode* cur = sessInfo->head;
     while(cur != NULL){
-        printf("\t%s\n", cur->user->usrName);
+        printf("\t%s\t%d\n", cur->user->usrName, cur->user->sessionJoined);
         cur = cur->next;
     }
 }

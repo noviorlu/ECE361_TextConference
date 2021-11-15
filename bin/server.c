@@ -183,9 +183,11 @@ void processData(struct message* b, int recvFd){
     }
 }
 void leaveSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply){
+    printf("LEAVING SESSION\n");
     if(strlen(sessionId) == 0){
         printf("leaving allsession\n");
         leaveAllSession_H(usrName);
+        message(reply, 0, LS_ACK, "Admin", "");
         printAllSession();
         return;
     }

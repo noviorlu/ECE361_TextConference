@@ -81,12 +81,21 @@ void join(struct message* b, char* buf){
 
 void leave(struct message* b, char* buf){
     buf = strtok (NULL, " \n");
-    if(strlen(buf) == 0){
+    if(buf==NULL||strlen(buf) == 0){
         message(b,0,LEAVE_SESS,usrName,"");
     }else{
         char result[MAX_SESSIONId];
         strcpy(result,buf);
         message(b,strlen(result),LEAVE_SESS,usrName,result);
+    } 
+}
+
+void sendMessage(struct message* b, char* buf){
+    // buf = strtok (NULL, " \n");
+    if(buf!=NULL||strlen(buf) != 0){
+        char result[MAX_SESSIONId];
+        strcpy(result,buf);
+        message(b,strlen(result),MESSAGE,usrName,result);
     } 
 }
 
@@ -161,6 +170,7 @@ void processData(){
     }else{
         //sendMessage
         type = MESSAGE;
+        sendMessage(&b,buf);
     }
     printf("Sending message: ");
     printMessage(&b);
@@ -217,5 +227,6 @@ int cmdToEnum(char* data){
         printf("Quiting Session......Client end.\n");
         exit(0);
     }
+    printf("not find");
     return -1;
 }

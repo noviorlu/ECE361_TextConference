@@ -93,7 +93,9 @@ int joinSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]){
         printf("joinSession ERROR: JOINED USER NO FOUND\n");
         return -1;
     }
-
+    if(usrInfo->sessionJoined==0){
+        leaveFromSession(usrInfo->usrName, &sessionDB[0]);
+    }
     int sess = findSession(sessionId);
     if(sess == -1){
         printf("joinSession ERROR: SESSION NO FOUND\n");
@@ -239,12 +241,13 @@ LoginUsrInfo* findUsrInfoByUser(char usrName[MAX_NAME]){
 // Given userName find the first SessionId that contains userName
 // record the checking process by int ptr range(0, MAX_SESSION)
 // return NULL if found no more (return the first founded Session)
-SessionInfo* findFirstSessionByUser(char usrName[MAX_NAME]){
-    for(int i = 0; i < MAX_SESSION; i++){
-        JoinedNode* cur = sessionDB[i]->head;
+SessionInfo* findFirstSessionByUser(char usrName[MAX_NAME],int* i){
+    for( ;(*i) < MAX_SESSION; (*i)++){
+        if(sessionDB[*i] == NULL) continue;
+        JoinedNode* cur = sessionDB[*i]->head;
         while(cur != NULL) {
             if(cur->user != NULL && strcmp(cur->user->usrName, usrName) == 0){
-                return sessionDB[i];
+                return sessionDB[*i];
             }
             cur = cur->next;
         }
@@ -258,7 +261,7 @@ void printAllUsrInSession(SessionInfo* sessInfo){
     printf("%s:\n",sessInfo->sessionId);
     JoinedNode* cur = sessInfo->head;
     while(cur != NULL){
-        printf("\t%s\t%d\n", cur->user->usrName, cur->user->sessionJoined);
+        printf("\t%s\t%d\t%d\n", cur->user->usrName, cur->user->sessionJoined, cur->user->sockFd);
         cur = cur->next;
     }
 }

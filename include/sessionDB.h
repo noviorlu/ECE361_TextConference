@@ -41,7 +41,7 @@ extern void createUsr(char usrName[MAX_NAME], int sockFd);
 
 extern LoginUsrInfo* findUsrInfoByFd(int sockFd);
 extern LoginUsrInfo* findUsrInfoByUser(char usrName[MAX_NAME]);
-extern SessionInfo* findFirstSessionByUser(char usrName[MAX_NAME]);
+extern SessionInfo* findFirstSessionByUser(char usrName[MAX_NAME], int*i);
 
 extern void leaveAllSession_H(char usrName[MAX_NAME]);
 extern void deleteUsr(char usrName[MAX_NAME]);

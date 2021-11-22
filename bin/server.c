@@ -24,7 +24,7 @@ void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* 
 void createSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
 void leaveSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
 void query(struct message* reply);
-
+void sessionMessage(struct message*b, int recvFd);
 void processData(struct message* b, int recvFd);
 
 void initServer(char* PORT);
@@ -140,12 +140,13 @@ void processData(struct message* b, int recvFd){
 
     if(b->type == LOGIN){
         if(usr != NULL){
-            message(&reply, 18, LO_NAK, "Admin", "usr already Login\n"); 
+            message(&reply, 31, LO_NAK, "Admin", "login ERRPR: usr already Login\n"); 
         }
         else {
             login(b,&reply, recvFd);
         }
     }
+
     if(usr!=NULL){
         printf("PROCESSING TYPE: %d\n", b->type);
         if(usr->sessionJoined==0){
@@ -156,6 +157,8 @@ void processData(struct message* b, int recvFd){
                 join(usr->usrName,b->data,&reply);
             }else if(b->type == NEW_SESS){
                 createSess(usr->usrName,b->data,&reply);
+            }else{
+                message(&reply, 15, CMD_NAK, "Admin", "Invalid Command");
             }
         }else if(usr->sessionJoined>0){
             printf("inSession\n");
@@ -167,25 +170,15 @@ void processData(struct message* b, int recvFd){
                 createSess(usr->usrName,b->data,&reply);
             }else if(b->type == LEAVE_SESS){
                 leaveSess(usr->usrName,b->data,&reply);
+            }else if(b->type == MESSAGE){
+                sessionMessage(b,recvFd);
+                printf("ALL MESSAGE SUCCESSFULLY SEND\n");
+                return;
+            }else{
+                message(&reply, 15, CMD_NAK, "Admin", "Invalid Command");
             }
         }
     }
-
-//         case SESSION:
-//             // EXIT:
-//             // QUIT:
-//             // MESSAGE:
-//             // QUERY:
-// //            if(b->type == QUERY){
-// //                //query(&reply);
-// //            }else{
-// //                message(&reply, 79, CMD_NAK, "Admin",
-// //                        "Command Not Find, Command Avliable are:\n joinSession,
-// //                createSession,leaveSession,logout,list,quit");
-// //            }
-//             break;
-//     }
-
     char array[MAX_TOTAL];
     messageToString(array,&reply);
     printf("message Sending: %s\n", array);
@@ -205,11 +198,11 @@ void leaveSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct mess
     int result = leaveFromSession_H(usrName, sessionId);
     printAllSession();
     if(result==-1){
-        message(reply, 41, LS_NAK, "Admin", "leaveSess ERROR: NOT ALLOWED TO LEAVE HALL");
+        message(reply, 42, LS_NAK, "Admin", "leaveSess ERROR: NOT ALLOWED TO LEAVE HALL\n");
     }else if(result==-2){
-        message(reply, 42, LS_NAK, "Admin", "leaveSess ERROR: SESSION NOT EXIST");
+        message(reply, 43, LS_NAK, "Admin", "leaveSess ERROR: SESSION NOT EXIST\n");
     }else if(result==-3){
-        message(reply, 41, LS_NAK, "Admin", "leaveSess ERROR: USER NOT EXIST IN SESSION");
+        message(reply, 42, LS_NAK, "Admin", "leaveSess ERROR: USER NOT EXIST IN SESSION\n");
     }else{
         message(reply, 0, LS_ACK, "Admin", "");
     }
@@ -219,11 +212,11 @@ void createSess(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct mes
     int result = createSession_H(usrName,sessionId);
     printAllSession();
     if(result==-1){
-        message(reply, 41, NS_NAK, "Admin", "createsession ERROR: JOINED USER NO FOUND");
+        message(reply, 42, NS_NAK, "Admin", "createsession ERROR: JOINED USER NO FOUND\n");
     }else if(result==-2){
-        message(reply, 42, NS_NAK, "Admin", "createsession ERROR: SESSION ALREADY EXIST");
+        message(reply, 43, NS_NAK, "Admin", "createsession ERROR: SESSION ALREADY EXIST\n");
     }else if(result==-3){
-        message(reply, 41, NS_NAK, "Admin", "createsession ERROR: SESSIONDB FULLFILLED");
+        message(reply, 42, NS_NAK, "Admin", "createsession ERROR: SESSIONDB FULLFILLED\n");
     }else{
         message(reply, 0, NS_ACK, "Admin", "");
     }
@@ -235,9 +228,9 @@ void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* 
     int result = joinSession_H(usrName,sessionId);
     printAllSession();
     if(result==-1){
-        message(reply, 39, JN_NAK, "Admin", "joinSession ERROR: JOINED USER NO FOUND");
+        message(reply, 40, JN_NAK, "Admin", "joinSession ERROR: JOINED USER NO FOUND\n");
     }else if(result==-2){
-        message(reply, 35, JN_NAK, "Admin", "joinSession ERROR: SESSION NO FOUND");
+        message(reply, 36, JN_NAK, "Admin", "joinSession ERROR: SESSION NO FOUND\n");
     }else{
         message(reply, 0, JN_ACK, "Admin", "");
     }
@@ -247,7 +240,7 @@ void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* 
 int login(struct message* b, struct message* reply, int recvFd){
     printf("in login\n");
     if(findUserInUsrDB(b->source,b->data) == -1){
-        message(reply, 49, LO_NAK, "Admin", "username or password not found, ConnectionClosed\n"); 
+        message(reply, 62, LO_NAK, "Admin", "login ERROR: username or password not found, ConnectionClosed\n"); 
         return -1;
     }
     else{
@@ -269,6 +262,48 @@ void logout(struct message* b, int recvFd){
     return;
 }
 
+void sessionMessage(struct message* b, int recvFd){
+    printf("SENDING MESSAGE TO SESSION\n");
+
+    b->type = MS_ACK;
+    
+    printMessage(b);
+    //messageToString(array, b);
+
+    LoginUsrInfo* usr = findUsrInfoByUser(b->source);
+    int i = 1;
+    struct sessionInfo* curSession;
+
+    char senderMessage[MAX_DATALEN];
+    strcpy(senderMessage,b->data);
+    printf("%s\n",senderMessage);
+
+    while(i < MAX_SESSION && (curSession = findFirstSessionByUser(usr->usrName, &i)) != NULL){
+        char temp[MAX_DATALEN]="";
+        char array[MAX_TOTAL]="";
+
+        // sprintf(temp, "%s;%s", curSession->sessionId, senderMessage);
+        sprintf(temp, "this is message:%s", senderMessage);
+
+        printf("%s\n",temp);
+        struct message tempMsg;
+        message(&tempMsg,strlen(temp),MESSAGE,b->source,temp);
+        printMessage(&tempMsg);
+        messageToString(array,&tempMsg);
+        
+
+        JoinedNode* cur = curSession->head;
+        while(cur != NULL){
+            if(recvFd!=cur->user->sockFd){ 
+                if(send(cur->user->sockFd,array,strlen(array),0) == -1){
+                    printf("Send message to Socket: %d failed\n", recvFd);
+                }
+            }
+            cur = cur->next;
+        }
+        i++;
+    }
+}
 
 void monitor(int fdmax, fd_set *restrict read_fds){
     // run through the existing connections looking for data to read
@@ -299,6 +334,8 @@ void monitor(int fdmax, fd_set *restrict read_fds){
         }
     }
 }
+
+
 
 void closeConnection(int sockFd){
     close(sockFd); // bye!

@@ -153,6 +153,11 @@ void processData(struct message* b, int recvFd){
             }else if(b->type == NEW_SESS){
                 createSess(usr->usrName,b->data,&reply);
             }else{
+                if(b->type == MESSAGE && strlen(b->data) == 0){
+                    printf("broken Pipeline\n");
+                    logout(b, recvFd);
+                    return;
+                } 
                 message(&reply, 15, CMD_NAK, "Admin", "Invalid Command");
             }
         }else if(usr->sessionJoined>0){
@@ -166,6 +171,11 @@ void processData(struct message* b, int recvFd){
             }else if(b->type == LEAVE_SESS){
                 leaveSess(usr->usrName,b->data,&reply);
             }else if(b->type == MESSAGE){
+                if(strlen(b->data) == 0){
+                    printf("broken Pipeline\n");
+                    logout(b, recvFd);
+                    return;
+                } 
                 sessionMessage(b,recvFd);
                 printf("ALL MESSAGE SUCCESSFULLY SEND\n");
                 return;
@@ -315,6 +325,10 @@ void monitor(int fdmax, fd_set *restrict read_fds){
             else {
                 struct message b;
                 int errorB = recvMessage(i, &b);
+
+                printf("Server Recv: ");
+                printMessage(&b);                
+                
                 if(errorB == 0){
                     printf("Client socket %d connection Closed\n", i);
                     closeConnection(i);

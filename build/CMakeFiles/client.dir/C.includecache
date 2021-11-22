@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/homes/c/cheny811/Desktop/ECE361_TextConference/include/sessionDB.h
+stdio.h
+-
+stdlib.h
+-
+stdbool.h
+-
+string.h
+-
+../include/var.h
+/homes/c/cheny811/Desktop/ECE361_TextConference/include/var.h
+
+/homes/c/cheny811/Desktop/ECE361_TextConference/include/var.h
+
+/homes/c/cheny811/Desktop/ECE361_TextConference/src/sessionDB.c
+../include/sessionDB.h
+/homes/c/cheny811/Desktop/ECE361_TextConference/include/sessionDB.h
+

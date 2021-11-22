@@ -8,14 +8,14 @@
 #define MAX_TOTAL MAX_DATALEN + MAX_TYPE + MAX_NAME + MAX_DATA + 3
 //MessageType
 enum TYPE{
-    LOGIN, LO_ACK, LO_NAK,  // 00~02
-    EXIT,                   // 03
-    JOIN, JN_ACK, JN_NAK,   // 04~06
-    LEAVE_SESS,LS_ACK, LS_NAK, // 07,08,09
-    NEW_SESS, NS_ACK, NS_NAK,// 10,11,12
-    MESSAGE, MS_ACK,        // 13,14
-    QUERY, QU_ACK,          // 15,16
-    CMD_NAK                 // 17
+    REG, LOGIN, LO_ACK, LO_NAK,     // 00~03
+    EXIT,                           // 04
+    JOIN, JN_ACK, JN_NAK,           // 05~07
+    LEAVE_SESS,LS_ACK, LS_NAK,      // 08,09,10
+    NEW_SESS, NS_ACK, NS_NAK,       // 11,12,13
+    MESSAGE, MS_ACK,                // 14,15
+    QUERY, QU_ACK,                  // 16,17
+    CMD_NAK                         // 18
 };
 
 struct message {

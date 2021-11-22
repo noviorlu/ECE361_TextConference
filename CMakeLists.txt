@@ -19,3 +19,6 @@ target_link_libraries(server m)
 
 add_executable(client ${EXCUTABLE}/client.c ${FUNC})
 target_link_libraries(client m)
+
+#add_executable(main ${EXCUTABLE}/main.c ${FUNC})
+#target_link_libraries(main m)

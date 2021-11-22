@@ -33,8 +33,6 @@ extern void initalizeSessionDB();
 
 extern int createSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]);
 
-//extern void deleteSession(char sessionId[MAX_SESSIONId]);
-
 extern int joinSession_H(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId]);
 
 extern void createUsr(char usrName[MAX_NAME], int sockFd);

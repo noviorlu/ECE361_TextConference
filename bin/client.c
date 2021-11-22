@@ -90,15 +90,6 @@ void leave(struct message* b, char* buf){
     } 
 }
 
-void sendMessage(struct message* b, char* buf){
-    // buf = strtok (NULL, " \n");
-    if(buf!=NULL||strlen(buf) != 0){
-        char result[MAX_SESSIONId];
-        strcpy(result,buf);
-        message(b,strlen(result),MESSAGE,usrName,result);
-    } 
-}
-
 // returns -1 if cnnot connect to server
 int login(struct message* b, char* buf){
     char* cmd[4];
@@ -122,28 +113,52 @@ int login(struct message* b, char* buf){
     return 0;
 }
 
+// returns -1 if cnnot connect to server
+int reg(struct message* b, char* buf){
+    char* cmd[4];
+    for(int i=0; i<4; i++) {
+        buf = strtok (NULL, " \n");
+        cmd[i] = buf;
+    }
+    if((initClient(cmd[2], cmd[3])) == -1){
+        printf("Cannot connect to server, Please Retry\n");
+        sender = -1;
+        return -1;
+    }else {
+        printf("Connection Successful\n");
+        fdmax = sender;
+        FD_SET(sender, &master);
+    }
+    
+    memset(usrName, 0, MAX_NAME);
+    strcpy(usrName, cmd[0]);
+    message(b, strlen(cmd[1]), REG, usrName, cmd[1]);
+    return 0;
+}
+
 void processData(){
     char readData[1024] = "";
     read(STDIN, readData, 1024);
 
     struct message b;
     char* buf;
-    buf = strtok(readData, " \n");
-    
     int type;
-
-    if(buf[0] == '/'){
+    if(readData[0] == '/'){
+        buf = strtok(readData, " \n");
         type = cmdToEnum(buf);
 
         if(type == -1){
             printf("Invalid cmd, please reType\n"); 
             return;
         }
-        if(fdmax == STDIN && type != LOGIN){
+        if(fdmax == STDIN && type != LOGIN && type != REG){
            printf("LOGIN ERROR: client not logined\n");
            return;
         }
         switch (type){
+            case REG:
+                if(reg(&b, buf) == -1) return;
+                break;
             case LOGIN:
                 if(sender != -1){
                     printf("ProcessData ERROR: client already Logined\n");
@@ -168,9 +183,8 @@ void processData(){
                  break;
         }
     }else{
-        //sendMessage
         type = MESSAGE;
-        sendMessage(&b,buf);
+        message(&b, strlen(readData), MESSAGE, usrName, readData);
     }
     printf("Sending message: ");
     printMessage(&b);
@@ -211,7 +225,9 @@ int initClient(char* ipAddr, char* port){
 
 // Convert String into TYPE enum
 int cmdToEnum(char* data){
-    if(strcmp(data, "/login") == 0) //
+    if(strcmp(data, "/reg") == 0) //
+        return REG; 
+    else if(strcmp(data, "/login") == 0) //
         return LOGIN; 
     else if(strcmp(data, "/logout") == 0) 
         return EXIT;

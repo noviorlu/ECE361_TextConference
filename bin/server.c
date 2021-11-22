@@ -18,6 +18,7 @@ fd_set master;
 int fdmax;
 #pragma endregion
 
+int reg(struct message* b, struct message* reply, int recvFd);
 int login(struct message* b, struct message* reply, int recvFd);
 void logout(struct message* b, int recvFd);
 void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* reply);
@@ -33,16 +34,6 @@ void closeConnection(int sockFd);
 int newConnection();
 void monitor(int fdmax, fd_set *restrict read_fds);
 void *get_in_addr(struct sockaddr *sa);
-
-//int main(){
-//    initalizeSessionDB();
-//    createUsr("Jack", 1);
-//    createSession_H("Jack", "a");
-//    printAllSession();
-//    int a = leaveFromSession_H("Jack", "a");
-//    printf("ErrorBIT %d\n", a);
-//    printAllSession();
-//}
 
 int main(int argc, char *argv[]){
     //get port via argv
@@ -138,12 +129,16 @@ void processData(struct message* b, int recvFd){
 
     LoginUsrInfo* usr = findUsrInfoByUser(b->source);
 
+    if(b->type == REG){
+        reg(b, &reply, recvFd);
+    }
+
     if(b->type == LOGIN){
         if(usr != NULL){
             message(&reply, 31, LO_NAK, "Admin", "login ERRPR: usr already Login\n"); 
         }
         else {
-            login(b,&reply, recvFd);
+            login(b, &reply, recvFd);
         }
     }
 
@@ -237,6 +232,24 @@ void join(char usrName[MAX_NAME], char sessionId[MAX_SESSIONId],struct message* 
     return;
 }   
 
+int reg(struct message* b, struct message* reply, int recvFd){
+    printf("in login\n");
+    int errorB = registerUsr(b->source,b->data);
+    if(errorB == -1){
+        message(reply, 36, LO_NAK, "Admin", "register ERROR: User Already exist!\n"); 
+        return -1;
+    }else if (errorB == -2){
+        message(reply, 30, LO_NAK, "Admin", "register ERROR: User DB FULL!\n"); 
+        return -2;
+    }
+    else{
+        createUsr(b->source,recvFd);
+        printAllSession();
+        message(reply, 0, LO_ACK, "Admin", "");
+        return 0;
+    }
+}
+
 int login(struct message* b, struct message* reply, int recvFd){
     printf("in login\n");
     if(findUserInUsrDB(b->source,b->data) == -1){
@@ -263,40 +276,25 @@ void logout(struct message* b, int recvFd){
 }
 
 void sessionMessage(struct message* b, int recvFd){
-    printf("SENDING MESSAGE TO SESSION\n");
-
-    b->type = MS_ACK;
     
+    printf("SENDING MESSAGE TO SESSION\n");
+    char array[MAX_TOTAL];
+    b->type = MS_ACK;
     printMessage(b);
-    //messageToString(array, b);
+    messageToString(array, b);
 
     LoginUsrInfo* usr = findUsrInfoByUser(b->source);
     int i = 1;
     struct sessionInfo* curSession;
 
-    char senderMessage[MAX_DATALEN];
-    strcpy(senderMessage,b->data);
-    printf("%s\n",senderMessage);
-
     while(i < MAX_SESSION && (curSession = findFirstSessionByUser(usr->usrName, &i)) != NULL){
-        char temp[MAX_DATALEN]="";
-        char array[MAX_TOTAL]="";
-
-        // sprintf(temp, "%s;%s", curSession->sessionId, senderMessage);
-        sprintf(temp, "this is message:%s", senderMessage);
-
-        printf("%s\n",temp);
-        struct message tempMsg;
-        message(&tempMsg,strlen(temp),MESSAGE,b->source,temp);
-        printMessage(&tempMsg);
-        messageToString(array,&tempMsg);
-        
-
         JoinedNode* cur = curSession->head;
         while(cur != NULL){
             if(recvFd!=cur->user->sockFd){ 
-                if(send(cur->user->sockFd,array,strlen(array),0) == -1){
-                    printf("Send message to Socket: %d failed\n", recvFd);
+                if(send(cur->user->sockFd, array, strlen(array), 0) == -1){
+                    printf("Send message to Socket: %d failed\n", cur->user->sockFd);
+                }else{
+                    printf("Sended Message to Socket: %d\n", cur->user->sockFd);
                 }
             }
             cur = cur->next;
